@@ -1,0 +1,52 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Library for surveyprofield_careybutton
+ *
+ * @package   surveyprofield_careybutton
+ * @copyright 2013 onwards kordan <stringapiccola@gmail.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Gets the options of "materia" for a given qid to be used in a select field of a Moodle form.
+ *
+ * @param string $qid The qid to filter the materias.
+ * @return array An associative array of options (id => fullname) to be used in a select field.
+ */
+function careybutton_get_materias_options($qid) {
+    global $DB;
+
+    // Initialize an empty array for the options.
+    $options = array();
+
+    // Validate that qid is not empty.
+    if (empty($qid)) {
+        return $options;
+    }
+
+    // Query the database to get the materias for the given qid.
+    $records = $DB->get_records('surveypro_materias', array('qid' => $qid), '', 'id, fullname');
+
+    // Populate the options array with id => fullname pairs.
+    foreach ($records as $record) {
+        $options[$record->id] = $record->fullname;
+    }
+
+    return $options;
+}

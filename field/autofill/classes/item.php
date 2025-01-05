@@ -67,7 +67,7 @@ class item extends itembase {
     protected $extranote;
 
     /**
-     * @var bool True if the instructions are going to be shown in the form; false otherwise
+     * @var boolean True if the instructions are going to be shown in the form; false otherwise
      */
     protected $hideinstructions;
 

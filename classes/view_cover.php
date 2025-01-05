@@ -146,6 +146,7 @@ class view_cover {
                 $a->responsescount = $inprogress;
                 $messages[] = get_string('yoursubmissions', 'mod_surveypro', $a);
             }
+			
         }
 
         $this->display_messages($messages, get_string('attemptinfo', 'mod_surveypro'));
@@ -183,6 +184,10 @@ class view_cover {
                     $message .= '.';
                 }
                 echo $OUTPUT->notification($message, 'notifyproblem');
+				 $paramurl = ['s' => $this->cm->instance, 'area' => 'surveypro', 'section' => 'submissionslist'];
+   				 $url = new \moodle_url('/mod/surveypro/view.php', $paramurl);
+				redirect($url);
+
             }
         }
         // End of: the button to add one more surveypro.

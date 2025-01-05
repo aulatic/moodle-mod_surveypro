@@ -36,6 +36,7 @@ use mod_surveypro\local\form\usersearch;
 
 require_once(dirname(__FILE__).'/../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
+require_once(dirname(__FILE__).'/careylib.php');
 
 $defaultsection = surveypro_get_defaults_section_per_area('surveypro');
 
@@ -224,6 +225,10 @@ if ($section == 'submissionform') {
         $nextpage = $submissionformman->get_nextpage(); // The page of the form to select subset of fields
         $submissionformman->set_formpage($nextpage);
     }
+	if ($begin == 9) {
+		$ultima_pagina = obtener_ultima_pagina_contestada($s, $submissionid);
+		$submissionformman->set_formpage($ultima_pagina);
+    }
     $formparams->formpage = $submissionformman->get_formpage(); // The page of the form to select subset of fields
     // End of: prepare params for the form.
 
@@ -256,6 +261,7 @@ if ($section == 'submissionform') {
         if ($prevbutton) {
             $submissionformman->next_not_empty_page(false);
             $paramurl['formpage'] = $submissionformman->get_nextpage();
+
             $paramurl['overflowpage'] = $submissionformman->get_overflowpage();
             $redirecturl = new \moodle_url('/mod/surveypro/view.php', $paramurl);
             redirect($redirecturl); // Redirect to the first non empty page.

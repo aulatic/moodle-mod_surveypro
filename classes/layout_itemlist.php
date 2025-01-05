@@ -173,36 +173,51 @@ class layout_itemlist {
         $baseurl = new \moodle_url('/mod/surveypro/layout.php', $paramurl);
         $table->define_baseurl($baseurl);
 
-        $tablecolumns = [];
-        $tablecolumns[] = 'plugin';
-        $tablecolumns[] = 'sortindex';
-        $tablecolumns[] = 'parentid';
-        $tablecolumns[] = 'customnumber';
-        $tablecolumns[] = 'content';
-        $tablecolumns[] = 'variable';
-        $tablecolumns[] = 'formpage';
-        $tablecolumns[] = 'availability';
-        $tablecolumns[] = 'actions';
-        $table->define_columns($tablecolumns);
+		$tablecolumns = [];
+		$tablecolumns[] = 'plugin';
+		$tablecolumns[] = 'sortindex';
+		$tablecolumns[] = 'parentid';
+		$tablecolumns[] = 'customnumber';
+		$tablecolumns[] = 'content';
+		$tablecolumns[] = 'dimension';
+		$tablecolumns[] = 'idmateria';
+		$tablecolumns[] = 'puntajemin';
+		$tablecolumns[] = 'puntajemax';
+		$tablecolumns[] = 'peso';
+		$tablecolumns[] = 'variable';
+		$tablecolumns[] = 'formpage';
+		$tablecolumns[] = 'availability';
+		$tablecolumns[] = 'actions';
+		$table->define_columns($tablecolumns);
 
-        $tableheaders = [];
-        $tableheaders[] = get_string('typeplugin', 'mod_surveypro');
-        $tableheaders[] = get_string('sortindex', 'mod_surveypro');
-        $tableheaders[] = get_string('branching', 'mod_surveypro');
-        $tableheaders[] = get_string('customnumber_header', 'mod_surveypro');
-        $tableheaders[] = get_string('content', 'mod_surveypro');
-        $tableheaders[] = get_string('variable', 'mod_surveypro');
-        $tableheaders[] = get_string('page');
-        $tableheaders[] = get_string('availability', 'mod_surveypro');
-        $tableheaders[] = get_string('actions');
-        $table->define_headers($tableheaders);
+		$tableheaders = [];
+		$tableheaders[] = get_string('typeplugin', 'mod_surveypro');
+		$tableheaders[] = get_string('sortindex', 'mod_surveypro');
+		$tableheaders[] = get_string('branching', 'mod_surveypro');
+		$tableheaders[] = get_string('customnumber_header', 'mod_surveypro');
+		$tableheaders[] = get_string('content', 'mod_surveypro');
+		$tableheaders[] = 'Dimensión';
+		$tableheaders[] = 'Id Materia';
+		$tableheaders[] = 'Puntaje Mínimo';
+		$tableheaders[] = 'Puntaje Máximo';
+		$tableheaders[] = 'Peso';
+		$tableheaders[] = get_string('variable', 'mod_surveypro');
+		$tableheaders[] = get_string('page');
+		$tableheaders[] = get_string('availability', 'mod_surveypro');
+		$tableheaders[] = get_string('actions');
+		$table->define_headers($tableheaders);
 
-        $table->sortable(true, 'sortindex'); // Sorted by sortindex by default.
-        $table->no_sorting('customnumber');
-        $table->no_sorting('content');
-        $table->no_sorting('variable');
-        $table->no_sorting('availability');
-        $table->no_sorting('actions');
+		$table->sortable(true, 'sortindex'); // Sorted by sortindex by default.
+		$table->no_sorting('customnumber');
+		$table->no_sorting('content');
+		$table->no_sorting('dimension');
+		$table->no_sorting('idmateria');
+		$table->no_sorting('puntajemin');
+		$table->no_sorting('puntajemax');
+		$table->no_sorting('peso');
+		$table->no_sorting('variable');
+		$table->no_sorting('availability');
+		$table->no_sorting('actions');
 
         $table->column_class('plugin', 'plugin');
         $table->column_class('sortindex', 'sortindex');
@@ -317,10 +332,16 @@ class layout_itemlist {
 
         foreach ($itemseeds as $itemseed) {
             $item = surveypro_get_item($this->cm, $this->surveypro, $itemseed->itemid, $itemseed->type, $itemseed->plugin, true);
+
             $itemid = $itemseed->itemid;
             $itemishidden = $item->get_hidden();
             $sortindex = $item->get_sortindex();
-
+			$dimension = isset($item->dimension) && !empty($item->dimension) ? $item->dimension : "noaplica";
+			$idmateria = isset($item->idmateria) ? $item->idmateria : "noaplica";
+			$puntajemin = isset($item->puntajemin) ? $item->puntajemin : "noaplica";
+			$puntajemax = isset($item->puntajemax) ? $item->puntajemax : "noaplica";
+			$peso = isset($item->peso) ? $item->peso : "noaplica";
+			
             // Begin of: $paramurlbase definition.
             $paramurlbase = [];
             $paramurlbase['s'] = $this->cm->instance;
@@ -371,8 +392,20 @@ class layout_itemlist {
                 $tablerow[] = '';
             }
 
-            // Content.
-            $tablerow[] = $item->get_content();
+			// Content.
+			$tablerow[] = $item->get_content();
+
+			// CUSTOM DATA CAREY
+			// CUSTOM DATA CAREY
+			if (($item->get_type() == SURVEYPRO_TYPEFIELD) || ($item->get_plugin() == 'label')) {
+				$tablerow[] = $dimension ?? 'noaplica';
+				$tablerow[] = $idmateria ?? 'noaplica';
+				$tablerow[] = $puntajemin ?? 'noaplica';
+				$tablerow[] = $puntajemax ?? 'noaplica';
+				$tablerow[] = $peso ?? 'noaplica';
+			} else {
+				$tablerow = array_merge($tablerow, array_fill(0, 5, ''));
+			}
 
             // Variable.
             if ($item->get_type() == SURVEYPRO_TYPEFIELD) {

@@ -1660,6 +1660,7 @@ EOS;
      */
     public function parent_validate_child_constraints($childparentvalue) {
         // Read introduction.
+        error_log("Reached padre parent_validate_child_constraints\n", 3, "/hostvirtual/aula.cloud/careydatos/temp/carey.log");
     }
 
     // MARK userform.
@@ -1731,27 +1732,121 @@ EOS;
      */
     public function userform_is_child_allowed_static($submissionid, $childitemrecord) {
         global $DB;
-
+        $debug_output = "";  // Inicializar variable para almacenar información de depuración
+    
+        // Verificación de `parentid` y `parentvalue`
         if (!isset($childitemrecord->parentid)) {
             $message = 'Unexpected $childitemrecord->parentid not set';
             debugging('Error at line '.__LINE__.' of '.__FILE__.'. '.$message , DEBUG_DEVELOPER);
         }
-
+    
         if (!isset($childitemrecord->parentvalue)) {
             $message = 'Unexpected $childitemrecord->parentvalue not set';
             debugging('Error at line '.__LINE__.' of '.__FILE__.'. '.$message , DEBUG_DEVELOPER);
         }
-
+    
         if (!$childitemrecord->parentid) {
+            $debug_output .= "<p>No hay parent ID, retornando true.</p>";
+            if (is_siteadmin()) {
+                echo $debug_output;
+            }
             return true;
+        } else {
+            $debug_output .= "<p>Tenemos padre con ID: {$childitemrecord->parentid}</p>";
         }
-
+    
+        // Obtener el tipo de plugin del padre en `mdl_surveypro_item` usando `parentid`
+        $plugin_type = $DB->get_field('surveypro_item', 'plugin', ['id' => $childitemrecord->parentid]);
+    
+        // Recuperar `givenanswer` de `mdl_surveypro_answer`
         $where = ['submissionid' => $submissionid, 'itemid' => $this->itemid];
-        $givenanswer = $DB->get_field('surveypro_answer', 'content', $where);
-
-        return ($givenanswer === $childitemrecord->parentvalue);
+        
+		if ($DB->record_exists('surveypro_answer', $where)) {
+			$givenanswer = $DB->get_field('surveypro_answer', 'content', $where);
+		} else {
+			$givenanswer = null;
+		}
+    
+        // Agregar información al bloque de depuración
+        $debug_output .= "<h2>Debugging Information:</h2>";
+        $debug_output .= "<p><strong>Plugin Type del Padre:</strong> " . ($plugin_type ?: 'No encontrado') . "</p>";
+        $debug_output .= "<p><strong>Parent ID:</strong> {$childitemrecord->parentid}</p>";
+        $debug_output .= "<p><strong>Parent Value:</strong> " . ($childitemrecord->parentvalue ?: 'No especificado') . "</p>";
+        $debug_output .= "<p><strong>Given Answer:</strong> " . ($givenanswer ?: 'No especificado') . "</p>";
+        $debug_output .= "<p><strong>Submission ID:</strong> {$submissionid}</p>";
+        $debug_output .= "<p><strong>Current Item ID:</strong> {$this->itemid}</p>";
+    
+        // Lógica específica para `checkbox`, `sliders`, `careybutton`, y `radiobutton`
+        if (in_array($plugin_type, ['checkbox', 'sliders'])) {
+            $debug_output .= "<p>Plugin es {$plugin_type} (checkbox o sliders), revisando coincidencias...</p>";
+    
+            // Separar `parentvalue` y `givenanswer` en arrays
+            $parentValues = explode(';', $childitemrecord->parentvalue);
+            $answerValues = explode(';', $givenanswer);
+    
+            // Recorremos los valores y verificamos si hay al menos una coincidencia
+            foreach ($parentValues as $index => $requiredValue) {
+                $answerValue = $answerValues[$index] ?? 'undefined';
+                $debug_output .= "<p>Comparando índice $index - Valor requerido: $requiredValue, Valor dado: $answerValue</p>";
+                
+                if ($requiredValue === '1' && $answerValue === '1') {
+                    $debug_output .= "<p>Coincidencia encontrada en índice $index, retornando true</p>";
+                    if (is_siteadmin()) {
+                        echo $debug_output;
+                    }
+					//die();
+                    return true;
+                }
+            }
+    
+            // Si no se encontró ninguna coincidencia
+            $debug_output .= "<p>No se encontraron coincidencias, retornando false</p>";
+            if (is_siteadmin()) {
+                echo $debug_output;
+            }
+            return false;
+        } elseif (in_array($plugin_type, ['careybutton', 'radiobutton'])) {
+            $debug_output .= "<p>Plugin es {$plugin_type} (careybutton o radiobutton), realizando comparación específica...</p>";
+			$debug_output .= "<p>Givenanswer es {$givenanswer}</p>";
+			// Validate if $givenanswer is set and not empty
+			if ($givenanswer === null || $givenanswer === '') {
+				$debug_output = "<p>Error: 'givenanswer' no está configurado o es vacío, retornando false.</p>";
+				if (is_siteadmin()) {
+					echo $debug_output;
+				}
+				return false;
+			}
+    
+            // Convertimos `parentvalue` en un conjunto de valores y comparamos con `givenanswer`
+            $parentValues = explode(';', $childitemrecord->parentvalue);
+            if (in_array($givenanswer, $parentValues)) {
+                $debug_output .= "<p>El valor dado ({$givenanswer}) está en el conjunto de valores aceptables (" . implode(', ', $parentValues) . "), retornando true.</p>";
+                if (is_siteadmin()) {
+                    echo $debug_output;
+                }
+                return true;
+            } else {
+                $debug_output .= "<p>El valor dado ({$givenanswer}) no coincide con los valores aceptables (" . implode(', ', $parentValues) . "), retornando false.</p>";
+                 if (is_siteadmin()) {
+                    echo $debug_output;
+                }
+				//die();
+                return false;
+            }
+        }
+    
+        // Comparación predeterminada para otros tipos de plugin
+        $result = ($givenanswer === $childitemrecord->parentvalue);
+        $debug_output .= "<p><strong>Resultado de comparación predeterminada:</strong> " . ($result ? 'Match' : 'No Match') . "</p>";
+        
+        // Imprimir toda la información de depuración al final si el usuario es administrador
+        if (is_siteadmin()) {
+		//if (true) {
+            echo $debug_output;
+        }
+		
+        return $result;
     }
-
     /**
      * This function is used ONLY if $surveypro->newpageforchild == false
      * it adds as much as needed $mform->disabledIf to disable items when parent condition does not match
@@ -1801,6 +1896,7 @@ EOS;
         // The array key is the the parent item ID, the corresponding value is the constrain that the parent imposes to the child.
 
         $displaydebuginfo = false;
+		$displaydebuginfo = true;
         foreach ($parentrestrictions as $parentid => $childparentvalue) {
             $parentitem = surveypro_get_item($this->cm, $this->surveypro, $parentid);
             $disabilitationinfo = $parentitem->userform_get_parent_disabilitation_info($childparentvalue);

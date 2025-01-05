@@ -862,14 +862,18 @@ class view_submissionlist {
                 }
                 if ($displayediticon) {
                     $paramurl['mode'] = SURVEYPRO_EDITMODE;
-                    $paramurl['begin'] = 1;
+					
+					//$paramurl['begin'] = $ismine ? 9 : 1; // Si es el dueño, comenzar donde la dejó
+					$paramurl['begin'] = $ismine ? 9 : 9; // para efectos de debugueo, comenzar desde el punto donde dejo el usuario siempre
+					
                     $paramurl['section'] = 'submissionform';
 
                     if ($submission->status == SURVEYPRO_STATUSINPROGRESS) {
                         // Here title and alt are ALWAYS $nonhistoryeditstr.
                         $link = new \moodle_url('/mod/surveypro/view.php', $paramurl);
                         $paramlink = ['id' => 'edit_submission_'.$submissionsuffix, 'title' => $nonhistoryeditstr];
-                        $icons = $OUTPUT->action_icon($link, $nonhistoryediticn, null, $paramlink);
+                        //$icons = $OUTPUT->action_icon($link, $nonhistoryediticn, null, $paramlink);
+						$icons .= '<a href="' . $link . '">Continuar</a>';
                     } else {
                         // Here title and alt depend from $this->surveypro->history.
                         $link = new \moodle_url('/mod/surveypro/view.php', $paramurl);
@@ -957,6 +961,28 @@ class view_submissionlist {
                     $link = new \moodle_url('/mod/surveypro/view.php', $paramurl);
                     $paramlink = ['id' => 'pdfdownload_submission_'.$submissionsuffix, 'title' => $downloadpdfstr];
                     $icons .= $OUTPUT->action_icon($link, $downloadpdficn, null, $paramlink);
+                }
+				
+				// Download to pdf.
+                $displayanalisislink = false;
+                if ($submission->status == SURVEYPRO_STATUSINPROGRESS) {
+                    $displayanalisislink = false;
+                } else {
+                    if ($ismine) { // Owner is me.
+                        $displayanalisislink = $cansavetopdfownsubmissions;
+                    } else {
+                        if ($mysamegroup) { // Owner is from a group of mine.
+                            $displayanalisislink = $cansavetopdfotherssubmissions;
+                        }
+                    }
+                }
+                if ($displayanalisislink) {
+                    $paramurl = $paramurlbase;
+                    $paramurl['submissionid'] = $submission->submissionid;
+                    $paramurl['sesskey'] = sesskey();
+
+                    $link = new \moodle_url('/mod/surveypro/analysis.php', $paramurl);
+					$icons .= '<a href="' . $link . '">Analizar</a>';
                 }
 
                 $tablerow[] = $icons;

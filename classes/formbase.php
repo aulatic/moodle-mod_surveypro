@@ -310,6 +310,87 @@ class formbase {
 
         return $prefill;
     }
+	
+    public function getMateriaQuestionCount($surveyid) {
+        global $DB;
+        // Prepare the associative array to hold idmateria and question count
+        $result = [];
+
+        try {
+            // Prepare the SQL query to get idmateria and question count from both tables via the itemid relation
+            $sql = "SELECT combined_questions.idmateria, COUNT(*) AS question_count
+        FROM (
+            SELECT itemid, idmateria FROM {surveyprofield_careybutton}
+            UNION ALL
+            SELECT itemid, idmateria FROM {surveyprofield_sliders}
+            UNION ALL
+            SELECT itemid, idmateria FROM {surveyprofield_textareacarey}
+            UNION ALL
+            SELECT itemid, idmateria FROM {surveyproformat_labelmateria}
+        ) AS combined_questions
+        JOIN {surveypro_item} si ON si.id = combined_questions.itemid
+        WHERE si.surveyproid = :surveyproid
+        GROUP BY combined_questions.idmateria";
+            
+            // Execute the query using Moodle's $DB API
+            $params = ['surveyproid' => $surveyid];
+            $records = $DB->get_records_sql($sql, $params);
+
+            // Fetch the results as an associative array
+            foreach ($records as $idmateria => $record) {
+                $result[$idmateria] = $record->question_count;
+            }
+			
+			// If surveyid is 2, fijamos la primera materia en 8 páginas 
+            if ($surveyid == 2) {
+                if (isset($result[0])) {
+                    $result[0] = 7;
+                } else {
+                    $result[0] = 7;
+                }
+            }
+        } catch (dml_exception $e) {
+            // Handle SQL errors (e.g., log them)
+            debugging('Database error: ' . $e->getMessage(), DEBUG_DEVELOPER);
+        }
+
+        return $result;
+    }
+	
+	    /**
+     * Calculate and return the percentage progress on the current materia.
+     *
+     * @param int $currentPage The current page number.
+     * @param int $surveyid The survey ID.
+     * @return float The progress percentage of the current materia.
+     */
+	public function getMateriaProgress($currentPage, $surveyid) {
+		$materiaCounts = $this->getMateriaQuestionCount($surveyid);
+
+		$cumulativeQuestions = 0;
+		$currentMateriaQuestions = 0;
+
+		foreach ($materiaCounts as $idmateria => $questionCount) {
+			$cumulativeQuestions += $questionCount;
+
+			if ($cumulativeQuestions >= $currentPage) {
+				$currentMateriaQuestions = $questionCount;
+				$questionsBeforeCurrentMateria = $cumulativeQuestions - $currentMateriaQuestions;
+				$questionsOnCurrentPage = $currentPage - $questionsBeforeCurrentMateria;
+
+				// Adjust numerator and denominator to exclude the "non-question" step
+				$adjustedNumerator = max(0, $questionsOnCurrentPage - 1);
+				$adjustedDenominator = max(1, $currentMateriaQuestions - 1);
+
+				$progressPercentage = ($adjustedNumerator / $adjustedDenominator) * 100;
+
+				return min(100, max(0, $progressPercentage));
+			}
+		}
+
+		return 100; // If we've reached beyond all questions, return 100%
+	}
+
 
     /**
      * Display the text "Page x of y".
@@ -317,7 +398,7 @@ class formbase {
      * @return void
      */
     public function display_page_x_of_y() {
-        global $OUTPUT;
+        global $OUTPUT, $DB;
 
         if ($this->userformpagecount > 1) {
             $a = new \stdClass();
@@ -329,9 +410,76 @@ class formbase {
             } else {
                 $unaccesiblepagesnote = '';
             }
-
-            echo $OUTPUT->heading(get_string('pagexofy', 'mod_surveypro', $a).' '.$unaccesiblepagesnote);
+			if (is_siteadmin()) {
+            	echo $OUTPUT->heading(get_string('pagexofy', 'mod_surveypro', $a).' '.$unaccesiblepagesnote);
+			}
         }
+		
+        // Obtener los ítems de la página actual.
+        $canaccessreserveditems = has_capability('mod/surveypro:accessreserveditems', $this->context);
+        [$where, $params] = surveypro_fetch_items_seeds(
+            $this->surveypro->id, true, $canaccessreserveditems, null, null, $this->formpage
+        );
+		
+		// Obtener todos los ítems de la página actual desde la base de datos.
+        $itemseeds = $DB->get_records_select('surveypro_item', $where, $params, 'sortindex', 'id, parentid, parentvalue, plugin, type');
+
+ 		// Variable para almacenar el último idmateria encontrado.
+        $last_idmateria = 0;
+
+        foreach ($itemseeds as $item) {
+			
+			//debug
+			//print_r ($item);
+			
+            // Obtener información adicional del ítem de la tabla específica del plugin.
+            $plugin_table = "surveypro" . $item->type . "_" . $item->plugin;
+			
+			//debug
+			//echo "plugin" . $item->plugin . "id" . $item->id;
+
+            try {
+                $plugin_data = $DB->get_record($plugin_table, ['itemid' => $item->id]);
+
+                if ($plugin_data) {
+                    // Almacenar el valor del campo idmateria del último ítem procesado.
+                    $last_idmateria = $plugin_data->idmateria;
+                }
+            } catch (\dml_exception $e) {
+                echo "Error al obtener información del ítem desde la tabla {$plugin_table}: " . $e->getMessage() . "\n";
+            }
+        }
+		// Consultar el fullname de la materia correspondiente.
+        $fullname = "Información de la Organización"; // Valor por defecto si el idmateria es 0.
+        if ($last_idmateria !== 0) {
+            try {
+                $materia = $DB->get_record('surveypro_materias', ['id' => $last_idmateria], 'fullname');
+                if ($materia) {
+                    $fullname = $materia->fullname;
+                }
+            } catch (\dml_exception $e) {
+                echo "Error al obtener el fullname de la materia con id {$last_idmateria}: " . $e->getMessage() . "\n";
+            }
+        }
+
+        // Mostrar el fullname obtenido.
+        echo "<h3>Materia: {$fullname}</h3>\n";
+		
+		$materiaCounts = $this->getMateriaQuestionCount($this->surveypro->id);
+		//print_r($materiaCounts);
+		$pagina = $this->formpage;
+		$progress = $this->getMateriaProgress($pagina, $this->surveypro->id);
+        echo "Progreso de la materia:<br>";
+		
+		        // Crear una barra de progreso en HTML puro
+        echo '<div style="width: 100%; background-color: #f3f3f3; border: 1px solid #ccc; margin-top: 10px; border-radius: 10px; overflow: hidden;">
+                <div style="width: ' . $progress . '%; background-color: #4caf50; height: 20px; text-align: center; color: white; line-height: 20px; border-radius: 10px 0 0 10px;">
+                    ' . round($progress, 2) . '%
+                </div>
+              </div>
+			  <br><br>';
+		
+		
     }
 
     /**
