@@ -44,7 +44,7 @@ echo $OUTPUT->header();
     <div class="row mb-4">
         <div class="col-md-12">
             <h2 class="text-center">Encuesta: <?php echo $surveypro->name; ?></h2>
-            <p class="text-center">Usuario: <?php echo fullname($user); ?></p>
+            <p class="text-center">Informante: <?php echo fullname($user); ?></p>
             <p class="text-center">Empresa: <?php echo $user->institution; ?></p>
             <p class="text-center">Fecha de creación: <?php echo userdate($submission->timecreated); ?></p>
             <p class="text-center">Última modificación: <?php echo !empty($submission->timemodified) ? userdate($submission->timemodified) : 'N/A'; ?></p>
