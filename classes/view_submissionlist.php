@@ -887,7 +887,7 @@ class view_submissionlist {
 
                     $link = new \moodle_url('/mod/surveypro/view.php', $paramurl);
                     $paramlink = ['id' => 'view_submission_'.$submissionsuffix, 'title' => $readonlyaccessstr];
-                    $icons = $OUTPUT->action_icon($link, $readonlyicn, null, $paramlink);
+                    $icons = '<a class="acciones" href="' . $link . '">Ver Respuestas</a>';
                 }
 
                 // Duplicate.
@@ -960,7 +960,7 @@ class view_submissionlist {
 
                     $link = new \moodle_url('/mod/surveypro/view.php', $paramurl);
                     $paramlink = ['id' => 'pdfdownload_submission_'.$submissionsuffix, 'title' => $downloadpdfstr];
-                    $icons .= $OUTPUT->action_icon($link, $downloadpdficn, null, $paramlink);
+                    $icons .= '<a class="acciones" href="' . $link . '">Descargar PDF respuestas</a>';
                 }
 				
 				// Download to pdf.
@@ -982,7 +982,7 @@ class view_submissionlist {
                     $paramurl['sesskey'] = sesskey();
 
                     $link = new \moodle_url('/mod/surveypro/analysis.php', $paramurl);
-					$icons .= '<a href="' . $link . '">Analizar</a>';
+					$icons .= '<a class="acciones" href="' . $link . '">Analizar</a>';
                 }
 
                 $tablerow[] = $icons;
