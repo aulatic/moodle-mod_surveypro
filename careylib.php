@@ -265,6 +265,8 @@ function sliders_check_special_cases($options_array, $selected_indices) {
                 return 'idk';
             } elseif (strpos($option, 'none::') === 0) {
                 return 'none';
+            } elseif (strpos($option, 'incorrect::') === 0) {
+                return 'incorrect';
             }
         }
     }
