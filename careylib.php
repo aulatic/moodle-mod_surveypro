@@ -48,8 +48,12 @@ function transform_answer_to_score($answer, $min_score, $max_score) {
             return null; // Omit this answer, no contribution to the score
         case 'none':
         case 'incorrect':
+        case 'incorrect2':
+        case 'incorrect3':
             return $min_score; // Assign minimum score
         case 'correct':
+        case 'correct2':
+        case 'correct3':
 		case 'yes':
             return $max_score; // Assign maximum score
         case 'mid':
