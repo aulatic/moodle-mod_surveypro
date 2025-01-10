@@ -1456,6 +1456,10 @@ class view_submissionlist {
 
         $canseeotherssubmissions = has_capability('mod/surveypro:seeotherssubmissions', $this->context);
 
+        if (!$canseeotherssubmissions) {
+            return;
+        }
+
         $strstatusinprogress = get_string('statusinprogress', 'mod_surveypro');
         $strstatusclosed = get_string('statusclosed', 'mod_surveypro');
 
