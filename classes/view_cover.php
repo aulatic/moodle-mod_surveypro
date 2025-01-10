@@ -150,7 +150,10 @@ class view_cover {
         }
 
         if ($canaccessreserveditems) {
-            $this->display_messages($messages, get_string('attemptinfo', 'mod_surveypro'));
+            //redirect to submissions list
+            $paramurl = ['s' => $this->cm->instance, 'area' => 'surveypro', 'section' => 'submissionslist'];
+            $url = new \moodle_url('/mod/surveypro/view.php', $paramurl);
+            redirect ($url);
         }
         $messages = [];
         // End of: general info.
