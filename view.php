@@ -98,10 +98,10 @@ if ($section == 'cover') {
 
     // Output starts here.
     echo $OUTPUT->header();
-
-    $actionbar = new \mod_surveypro\output\action_bar($cm, $context, $surveypro);
-    echo $actionbar->draw_view_action_bar();
-
+    if ($canmanageitems) {
+        $actionbar = new \mod_surveypro\output\action_bar($cm, $context, $surveypro);
+        echo $actionbar->draw_view_action_bar();
+    }
     if (!$itemcount) { // Admin was redirected. Student gets the alert.
         $message = get_string('noitemsfound', 'mod_surveypro');
         echo $OUTPUT->notification($message, 'notifyproblem');
@@ -165,8 +165,10 @@ if ($section == 'submissionslist') {
     // Output starts here.
     echo $OUTPUT->header();
 
-    $actionbar = new \mod_surveypro\output\action_bar($cm, $context, $surveypro);
-    echo $actionbar->draw_view_action_bar();
+    if ($canmanageitems) {
+        $actionbar = new \mod_surveypro\output\action_bar($cm, $context, $surveypro);
+        echo $actionbar->draw_view_action_bar();
+    }
 
     if (!empty($justsubmitted)) {
         $submissionlistman->show_thanks_page($responsestatus, $justsubmitted);
