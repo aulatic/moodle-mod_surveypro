@@ -149,7 +149,9 @@ class view_cover {
 			
         }
 
-        $this->display_messages($messages, get_string('attemptinfo', 'mod_surveypro'));
+        if ($canaccessreserveditems) {
+            $this->display_messages($messages, get_string('attemptinfo', 'mod_surveypro'));
+        }
         $messages = [];
         // End of: general info.
 
