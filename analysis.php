@@ -162,7 +162,7 @@ echo $OUTPUT->header();
                                 $table->add_data(['Preguntas Evaluadas', $num_evaluated_items]);
                                 $table->add_data(['Preguntas No Contestadas', $num_unanswered]);
                                 $table->add_data(['Datos ignorados por el informante', $num_omitted]);
-                                $table->add_data(['Preguntas Válidamente Respondidas', $num_valid]);
+                                $table->add_data(['Respuestas válidad', $num_valid]);
 
                                 // Display the table
                                 $table->finish_output();
