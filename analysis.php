@@ -2,9 +2,9 @@
 
 
 require_once('../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
-require_once(dirname(__FILE__).'/lib.php');
-require_once(dirname(__FILE__).'/careylib.php');
+require_once($CFG->libdir . '/adminlib.php');
+require_once(dirname(__FILE__) . '/lib.php');
+require_once(dirname(__FILE__) . '/careylib.php');
 
 
 $submissionid = required_param('submissionid', PARAM_INT);
@@ -63,12 +63,12 @@ echo $OUTPUT->header();
                     <select class="form-control" id="materia" name="materia">
                         <option value="">Seleccionar Materia a Analizar</option>
                         <?php
-						if (!empty($materias)) {
-							foreach ($materias as $materia_item) {
-								$selected = ($materia_item->id == $materia) ? 'selected' : '';
-								echo '<option value="' . $materia_item->id . '" ' . $selected . '>' . $materia_item->fullname . '</option>';
-							}
-						}
+                        if (!empty($materias)) {
+                            foreach ($materias as $materia_item) {
+                                $selected = ($materia_item->id == $materia) ? 'selected' : '';
+                                echo '<option value="' . $materia_item->id . '" ' . $selected . '>' . $materia_item->fullname . '</option>';
+                            }
+                        }
                         ?>
                     </select>
                 </div>
@@ -76,102 +76,117 @@ echo $OUTPUT->header();
             </form>
         </div>
     </div>
-<?php if (!empty($materia)) { ?>
-    <div class="row">
-        <?php foreach ($dimensiones as $dimension) {
-    $evaluated_items = get_numero_evaluated_items($materia, $dimension);
-    $num_evaluated_items = count($evaluated_items);
-    $num_unanswered = 0;
-?>
-    <div class="col-md-4 mb-4">
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title"><?php echo ucfirst($dimension); ?></h3>
-                <p>Preguntas Evaluadas: <?php echo $num_evaluated_items; ?></p>
-<?php if (!empty($evaluated_items)) { ?>
-    <ul>
-        <?php 
-        $total_score = 0; 
-        $num_unanswered = 0; 
-        $num_omitted = 0; // Contador de respuestas omitidas
-        $num_valid = 0;
-        $total_min_score = 0; // Suma de puntajes mínimos
-        $total_max_score = 0; // Suma de puntajes máximos
+    <?php if (!empty($materia)) { ?>
+        <div class="row">
+            <?php foreach ($dimensiones as $dimension) {
+                $evaluated_items = get_numero_evaluated_items($materia, $dimension);
+                $num_evaluated_items = count($evaluated_items);
+                $num_unanswered = 0;
+            ?>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title"><?php echo ucfirst($dimension); ?></h3>
 
-        foreach ($evaluated_items as $item) { 
-            $answer_content = get_user_answer($submissionid, $item['itemid'], $item['plugin']);
-			//echo "answer_content" . $answer_content;
-            if ($answer_content === 'NC') {
-                $num_unanswered++;
-				continue;
-            }
+                            <?php if (!empty($evaluated_items)) { ?>
+                                <ul>
+                                    <?php
+                                    $total_score = 0;
+                                    $num_unanswered = 0;
+                                    $num_omitted = 0; // Contador de respuestas omitidas
+                                    $num_valid = 0;
+                                    $total_min_score = 0; // Suma de puntajes mínimos
+                                    $total_max_score = 0; // Suma de puntajes máximos
+
+                                    foreach ($evaluated_items as $item) {
+                                        $answer_content = get_user_answer($submissionid, $item['itemid'], $item['plugin']);
+                                        //echo "answer_content" . $answer_content;
+                                        if ($answer_content === 'NC') {
+                                            $num_unanswered++;
+                                            continue;
+                                        }
 
 
 
-            $answer = map_plugin_answer($item['itemid'], $answer_content, $item['plugin']);
-			//echo "answer" . $answer;
-            $scores = get_question_scores($item['plugin'], $item['itemid']);
-            
-            // Transformar la respuesta en puntaje
-            $score = transform_answer_to_score($answer, $scores['min_score'], $scores['max_score']);
+                                        $answer = map_plugin_answer($item['itemid'], $answer_content, $item['plugin']);
+                                        //echo "answer" . $answer;
+                                        $scores = get_question_scores($item['plugin'], $item['itemid']);
 
-            // Contar respuestas omitidas y no acumular sus puntajes mínimos ni máximos
-            if ($score === null && $answer === 'idk') {
-                $num_omitted++;
-                continue; // Salta a la siguiente iteración, omitiendo suma de puntajes
-            }
+                                        // Transformar la respuesta en puntaje
+                                        $score = transform_answer_to_score($answer, $scores['min_score'], $scores['max_score']);
 
-            $num_valid++;
+                                        // Contar respuestas omitidas y no acumular sus puntajes mínimos ni máximos
+                                        if ($score === null && $answer === 'idk') {
+                                            $num_omitted++;
+                                            continue; // Salta a la siguiente iteración, omitiendo suma de puntajes
+                                        }
 
-            // Sumar puntajes mínimos y máximos
-            $total_min_score += $scores['min_score'];
-            $total_max_score += $scores['max_score'];
+                                        $num_valid++;
 
-            // Acumular el puntaje total si es válido
-            if ($score !== null) {
-                $total_score += $score;
-            }
-        ?>
-        <?php if ($canmanegeitems) { ?>
-            <li>
-                
-                <? echo $item['itemid']; ?> - <?php echo $item['plugin']; ?>: <?php echo $answer; ?>
-               
-                <br> Puntaje Mínimo: <?php echo $scores['min_score']; ?>
-                <br> Puntaje Máximo: <?php echo $scores['max_score']; ?>
-                <br> Puntaje Asignado: <?php echo $score !== null ? $score : 'Omitido'; ?>
-            </li>
+                                        // Sumar puntajes mínimos y máximos
+                                        $total_min_score += $scores['min_score'];
+                                        $total_max_score += $scores['max_score'];
+
+                                        // Acumular el puntaje total si es válido
+                                        if ($score !== null) {
+                                            $total_score += $score;
+                                        }
+                                    ?>
+                                        <?php if ($canmanegeitems) { ?>
+                                            <li>
+
+                                                <? echo $item['itemid']; ?> - <?php echo $item['plugin']; ?>: <?php echo $answer; ?>
+
+                                                <br> Puntaje Mínimo: <?php echo $scores['min_score']; ?>
+                                                <br> Puntaje Máximo: <?php echo $scores['max_score']; ?>
+                                                <br> Puntaje Asignado: <?php echo $score !== null ? $score : 'Omitido'; ?>
+                                            </li>
+                                        <?php } ?>
+                                    <?php } ?>
+                                </ul>
+                                <table border="1" cellspacing="0" cellpadding="5">
+                                    <tr>
+                                        <td>Preguntas Evaluadas</td>
+                                        <td><?php echo $num_evaluated_items; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Preguntas No Contestadas</td>
+                                        <td><?php echo $num_unanswered; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Datos ignorados por el informante</td>
+                                        <td><?php echo $num_omitted; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Preguntas Válidamente Respondidas</td>
+                                        <td><?php echo $num_valid; ?></td>
+                                    </tr>
+                                </table>
+                                <?php if ($canmanegeitems) { ?>
+                                    <p>Puntaje Total: <?php echo $total_score; ?></p>
+                                    <p>Suma de Mínimos: <?php echo $total_min_score; ?></p>
+                                    <p>Suma de Máximos: <?php echo $total_max_score; ?></p>
+                                <?php } ?>
+
+                                <?php
+                                // Calcular porcentaje basado en el puntaje obtenido y el rango entre mínimos y máximos
+                                if ($total_max_score > $total_min_score) {
+                                    $percentage = round((($total_score - $total_min_score) / ($total_max_score - $total_min_score)) * 100, 1);
+                                    $percentage_output = number_format($percentage, 2) . '%';
+                                    echo generate_percentage_bar($percentage);
+                                } else {
+                                    echo '<p>Porcentaje No se puede calcular</p>';
+                                }
+                                ?>
+                            <?php } else { ?>
+                                <p>No hay respuestas disponibles.</p>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
             <?php } ?>
-        <?php } ?>
-    </ul>
-    <p>Preguntas No Contestadas: <?php echo $num_unanswered; ?></p>
-    <p>Datos ignorados por el informante: <?php echo $num_omitted; ?></p>
-    <p>Preguntas Válidamente Respondidas: <?php echo $num_valid; ?></p>
-    <?php if ($canmanegeitems) { ?>
-    <p>Puntaje Total: <?php echo $total_score; ?></p>
-    <p>Suma de Mínimos: <?php echo $total_min_score; ?></p>
-    <p>Suma de Máximos: <?php echo $total_max_score; ?></p>
-    <?php } ?>
-    
-    <?php 
-    // Calcular porcentaje basado en el puntaje obtenido y el rango entre mínimos y máximos
-    if ($total_max_score > $total_min_score) {
-        $percentage = round((($total_score - $total_min_score) / ($total_max_score - $total_min_score)) * 100,1);
-        $percentage_output = number_format($percentage, 2) . '%';
-		echo generate_percentage_bar($percentage);
-    } else {
-        echo '<p>Porcentaje No se puede calcular</p>';
-    }
-    ?>
-<?php } else { ?>
-    <p>No hay respuestas disponibles.</p>
-<?php } ?>
-            </div>
         </div>
-    </div>
-<?php } ?>
-    </div>
-<?php } ?>
+    <?php } ?>
 
-<?php
-echo $OUTPUT->footer();
+    <?php
+    echo $OUTPUT->footer();
