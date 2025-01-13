@@ -140,9 +140,11 @@ echo $OUTPUT->header();
     </ul>
     <p>Preguntas No Contestadas: <?php echo $num_unanswered; ?></p>
     <p>Preguntas Omitidas: <?php echo $num_omitted; ?></p>
+    <?php if ($canmanegeitems) { ?>
     <p>Puntaje Total: <?php echo $total_score; ?></p>
     <p>Suma de Mínimos: <?php echo $total_min_score; ?></p>
     <p>Suma de Máximos: <?php echo $total_max_score; ?></p>
+    <?php } ?>
     
     <?php 
     // Calcular porcentaje basado en el puntaje obtenido y el rango entre mínimos y máximos
