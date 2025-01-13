@@ -37,6 +37,8 @@ $PAGE->set_heading('Análisis Cuantitativo');
 $submission = $DB->get_record('surveypro_submission', ['id' => $submissionid], '*', MUST_EXIST);
 $user = $DB->get_record('user', ['id' => $submission->userid], '*', MUST_EXIST);
 
+$canmanegeitems = has_capability('mod/surveypro:manageitems', $context);
+
 echo $OUTPUT->header();
 ?>
 
@@ -124,12 +126,14 @@ echo $OUTPUT->header();
                 $total_score += $score;
             }
         ?>
+        <?php if ($canmanegeitems) { ?>
             <li>
                 <?php echo $item['itemid']; ?> - <?php echo $item['plugin']; ?>: <?php echo $answer; ?>
                 <br> Puntaje Mínimo: <?php echo $scores['min_score']; ?>
                 <br> Puntaje Máximo: <?php echo $scores['max_score']; ?>
                 <br> Puntaje Asignado: <?php echo $score !== null ? $score : 'Omitido'; ?>
             </li>
+            <?php } ?>
         <?php } ?>
     </ul>
     <p>Preguntas No Contestadas: <?php echo $num_unanswered; ?></p>
