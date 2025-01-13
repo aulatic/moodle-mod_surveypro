@@ -139,7 +139,7 @@ echo $OUTPUT->header();
         <?php } ?>
     </ul>
     <p>Preguntas No Contestadas: <?php echo $num_unanswered; ?></p>
-    <p>Preguntas Omitidas: <?php echo $num_omitted; ?></p>
+    <p>Datos ignorados por el informante: <?php echo $num_omitted; ?></p>
     <?php if ($canmanegeitems) { ?>
     <p>Puntaje Total: <?php echo $total_score; ?></p>
     <p>Suma de Mínimos: <?php echo $total_min_score; ?></p>
