@@ -94,6 +94,7 @@ echo $OUTPUT->header();
         $total_score = 0; 
         $num_unanswered = 0; 
         $num_omitted = 0; // Contador de respuestas omitidas
+        $num_valid = 0;
         $total_min_score = 0; // Suma de puntajes mínimos
         $total_max_score = 0; // Suma de puntajes máximos
 
@@ -104,6 +105,9 @@ echo $OUTPUT->header();
                 $num_unanswered++;
 				continue;
             }
+
+
+
             $answer = map_plugin_answer($item['itemid'], $answer_content, $item['plugin']);
 			//echo "answer" . $answer;
             $scores = get_question_scores($item['plugin'], $item['itemid']);
@@ -116,6 +120,8 @@ echo $OUTPUT->header();
                 $num_omitted++;
                 continue; // Salta a la siguiente iteración, omitiendo suma de puntajes
             }
+
+            $num_valid++;
 
             // Sumar puntajes mínimos y máximos
             $total_min_score += $scores['min_score'];
@@ -140,6 +146,7 @@ echo $OUTPUT->header();
     </ul>
     <p>Preguntas No Contestadas: <?php echo $num_unanswered; ?></p>
     <p>Datos ignorados por el informante: <?php echo $num_omitted; ?></p>
+    <p>Preguntas Válidamente Respondidas: <?php echo $num_valid; ?></p>
     <?php if ($canmanegeitems) { ?>
     <p>Puntaje Total: <?php echo $total_score; ?></p>
     <p>Suma de Mínimos: <?php echo $total_min_score; ?></p>
