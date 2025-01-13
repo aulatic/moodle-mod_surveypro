@@ -128,7 +128,9 @@ echo $OUTPUT->header();
         ?>
         <?php if ($canmanegeitems) { ?>
             <li>
-                <?php echo $item['itemid']; ?> - <?php echo $item['plugin']; ?>: <?php echo $answer; ?>
+                <?php if ($canmanegeitems) {
+                echo $item['itemid']; ?> - <?php echo $item['plugin']; ?>: <?php echo $answer; ?>
+                <?php } ?>
                 <br> Puntaje Mínimo: <?php echo $scores['min_score']; ?>
                 <br> Puntaje Máximo: <?php echo $scores['max_score']; ?>
                 <br> Puntaje Asignado: <?php echo $score !== null ? $score : 'Omitido'; ?>
