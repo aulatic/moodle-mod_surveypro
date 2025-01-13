@@ -159,10 +159,10 @@ echo $OUTPUT->header();
                                 $table->setup();
 
                                 // Add rows to the table
-                                $table->add_data(['Preguntas Evaluadas', $num_evaluated_items]);
-                                $table->add_data(['Preguntas No Contestadas', $num_unanswered]);
+                                $table->add_data(['Preguntas evaluadas', $num_evaluated_items]);
+                                $table->add_data(['Preguntas no contestadas', $num_unanswered]);
                                 $table->add_data(['Datos ignorados por el informante', $num_omitted]);
-                                $table->add_data(['Respuestas válidad', $num_valid]);
+                                $table->add_data(['Respuestas válidas', $num_valid]);
 
                                 // Display the table
                                 $table->finish_output();
