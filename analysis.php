@@ -3,6 +3,7 @@
 
 require_once('../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+require_once($CFG->libdir . '/tablelib.php');
 require_once(dirname(__FILE__) . '/lib.php');
 require_once(dirname(__FILE__) . '/careylib.php');
 
@@ -144,24 +145,28 @@ echo $OUTPUT->header();
                                         <?php } ?>
                                     <?php } ?>
                                 </ul>
-                                <table border="1" cellspacing="0" cellpadding="5">
-                                    <tr>
-                                        <td>Preguntas Evaluadas</td>
-                                        <td><?php echo $num_evaluated_items; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Preguntas No Contestadas</td>
-                                        <td><?php echo $num_unanswered; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Datos ignorados por el informante</td>
-                                        <td><?php echo $num_omitted; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Preguntas Válidamente Respondidas</td>
-                                        <td><?php echo $num_valid; ?></td>
-                                    </tr>
-                                </table>
+                                <?php
+                                // Define table object
+                                $table = new flexible_table('summary-table');
+
+                                // Define table columns and their headers
+                                $table->define_columns(['description', 'value']);
+                                $table->define_headers(['', '']); // Leave headers empty for no table header
+
+                                // Make the table ready
+                                $table->define_baseurl($PAGE->url);
+                                $table->set_attribute('class', 'generaltable'); // Add Moodle's general table class for styling
+                                $table->setup();
+
+                                // Add rows to the table
+                                $table->add_data(['Preguntas Evaluadas', $num_evaluated_items]);
+                                $table->add_data(['Preguntas No Contestadas', $num_unanswered]);
+                                $table->add_data(['Datos ignorados por el informante', $num_omitted]);
+                                $table->add_data(['Preguntas Válidamente Respondidas', $num_valid]);
+
+                                // Display the table
+                                $table->finish_output();
+                                ?>
                                 <?php if ($canmanegeitems) { ?>
                                     <p>Puntaje Total: <?php echo $total_score; ?></p>
                                     <p>Suma de Mínimos: <?php echo $total_min_score; ?></p>
