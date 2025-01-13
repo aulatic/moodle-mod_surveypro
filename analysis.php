@@ -167,6 +167,7 @@ echo $OUTPUT->header();
                                 // Display the table
                                 $table->finish_output();
                                 ?>
+                                <br>
                                 <?php if ($canmanegeitems) { ?>
                                     <p>Puntaje Total: <?php echo $total_score; ?></p>
                                     <p>Suma de Mínimos: <?php echo $total_min_score; ?></p>
