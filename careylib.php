@@ -36,8 +36,25 @@ function get_question_scores($plugin, $itemid) {
     ];
 }
 
+/**
+ * The function `transform_answer_to_score` converts different answer types into corresponding scores
+ * based on predefined rules.
+ * 
+ * @param answer Please provide the answer for which you want to calculate the score.
+ * @param min_score The `min_score` parameter represents the minimum score that can be assigned to an
+ * answer. This score is given when the answer falls under certain categories like 'none', 'incorrect',
+ * 'incorrect2', 'incorrect3', or in any unexpected case.
+ * @param max_score The `max_score` parameter represents the highest possible score that can be
+ * assigned to an answer. This score is given when the answer is considered to be fully correct or
+ * meets the highest criteria.
+ * 
+ * @return The function `transform_answer_to_score` takes an answer as input and returns a score based
+ * on the rules defined in the function. If the answer is numeric, it calculates its percentage within
+ * the range and returns it rounded to one decimal place. If the answer matches specific strings like
+ * 'idk', 'none', 'incorrect', 'correct', 'mid', etc., it assigns a corresponding score based on
+ */
 function transform_answer_to_score($answer, $min_score, $max_score) {
-    // If the answer is numeric, calculate its percentage within the range
+
     if (is_numeric($answer)) {
         return round($answer,1);
     }
@@ -106,6 +123,23 @@ function get_numero_evaluated_items($materiaid, $dimension) {
     return $evaluated_items;
 }
 
+/**
+ * The function `get_user_answer` retrieves a user's answer content from a database table based on
+ * submission ID and item ID, returning 'NC' if no answer is found.
+ * 
+ * @param submissionid Submission ID is a unique identifier for a specific submission in a survey or
+ * form. It helps to distinguish one submission from another.
+ * @param itemid The `itemid` parameter in the `get_user_answer` function represents the ID of the item
+ * for which you want to retrieve the user's answer. This ID is used to identify the specific item
+ * within the survey or questionnaire for which you are fetching the answer.
+ * @param plugin It seems like the `plugin` parameter is not being used in the `get_user_answer`
+ * function. If you intended to use it for something specific within the function, you can modify the
+ * function to include the `plugin` parameter in the query or logic.
+ * 
+ * @return The function `get_user_answer` checks if a user's answer exists in the database for a
+ * specific submission ID and item ID. If the answer exists, it fetches and returns the content of the
+ * user's answer. If the answer does not exist, it returns 'NC' to indicate that no answer was found.
+ */
 function get_user_answer($submissionid, $itemid, $plugin) {
     global $DB;
 
@@ -136,6 +170,23 @@ function get_user_answer($submissionid, $itemid, $plugin) {
 }
 
 
+/**
+ * The function `map_plugin_answer` processes user responses based on different plugins like
+ * `careybutton` and `sliders` to map and calculate values accordingly.
+ * 
+ * @param itemid The `itemid` parameter in the `map_plugin_answer` function represents the unique
+ * identifier of the item for which the mapping of the answer is being performed. This identifier is
+ * used to retrieve specific data related to the item from the database tables associated with the
+ * plugins (`careybutton` and `sliders
+ * @param content The `map_plugin_answer` function takes three parameters: ``, ``, and
+ * ``. It processes the content based on the plugin type provided.
+ * @param plugin The `map_plugin_answer` function takes three parameters: ``, ``, and
+ * ``. The function checks the value of the `` parameter to determine how to process the
+ * `` parameter.
+ * 
+ * @return The function `map_plugin_answer` takes in parameters ``, ``, and ``,
+ * and based on the value of ``, it performs different operations to map and process the answer.
+ */
 function map_plugin_answer($itemid, $content, $plugin) {
     global $DB;
 
@@ -231,6 +282,13 @@ function sliders_sum_numeric_identifiers($options_array, $selected_indices) {
     return round($sum, 1);
 }
 
+/**
+ * Calculate the percentage of selected options that do not contain '::'.
+ *
+ * @param array $options_array The array of options.
+ * @param array $selected_indices The array of selected indices.
+ * @return float The percentage of selected options.
+ */
 function sliders_calculate_selection_percentage($options_array, $selected_indices) {
     // Filter options to include only those without '::'
     $filtered_options = array_filter($options_array, function ($option) {
@@ -257,6 +315,13 @@ function sliders_calculate_selection_percentage($options_array, $selected_indice
     return ($selected_count / $total_filtered_options) * 100; // Return percentage
 }
 
+/**
+ * Check for special cases in the selected options.
+ *
+ * @param array $options_array The array of options.
+ * @param array $selected_indices The array of selected indices.
+ * @return string|null The special case found, or null if no special case is found.
+ */
 function sliders_check_special_cases($options_array, $selected_indices) {
     foreach ($selected_indices as $index => $selected) {
         if ($selected == '1') {
@@ -274,6 +339,18 @@ function sliders_check_special_cases($options_array, $selected_indices) {
     return null; // No special case found
 }
 
+/**
+ * The function `generate_percentage_bar` creates a progress bar with dynamic color and width based on
+ * the input percentage.
+ * 
+ * @param percentage The function `generate_percentage_bar` takes a percentage value as input and
+ * generates a progress bar with a color gradient based on the percentage. The progress bar will have
+ * different colors and widths depending on the value of the percentage.
+ * 
+ * @return The function `generate_percentage_bar` returns a Bootstrap-compatible progress bar HTML
+ * element with a dynamic width and color gradient based on the input percentage. The progress bar
+ * visually represents the percentage value provided as input.
+ */
 function generate_percentage_bar($percentage) {
     // Determine the color and bar style based on the percentage
     $bar_style = ''; // Style includes both background and dynamic width
@@ -302,6 +379,9 @@ function generate_percentage_bar($percentage) {
         </div>
     </div>";
 }
+
+
+
 function generar_html_items_evaluados($qid) {
     global $DB;
 
