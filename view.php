@@ -343,8 +343,10 @@ if ($section == 'submissionform') {
     // Output starts here.
     echo $OUTPUT->header();
 
-    $actionbar = new \mod_surveypro\output\action_bar($cm, $context, $surveypro);
-    echo $actionbar->draw_view_action_bar();
+    if ($canmanageitems) {
+        $actionbar = new \mod_surveypro\output\action_bar($cm, $context, $surveypro);
+        echo $actionbar->draw_view_action_bar();
+    }
 
     $submissionformman->noitem_stopexecution();
     $submissionformman->nomoresubmissions_stopexecution();
