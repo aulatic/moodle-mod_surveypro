@@ -92,6 +92,7 @@ if ($section == 'cover') {
     $PAGE->set_cm($cm);
     $PAGE->set_title($surveypro->name);
     $PAGE->set_heading($course->shortname);
+    $PAGE->add_body_class($section);
     $PAGE->navbar->add(get_string('surveypro_dashboard', 'mod_surveypro'));
     // Is it useful? $PAGE->add_body_class('mediumwidth');.
     $utilitypageman->manage_editbutton($edit);
@@ -158,6 +159,7 @@ if ($section == 'submissionslist') {
     $PAGE->set_cm($cm);
     $PAGE->set_title($surveypro->name);
     $PAGE->set_heading($course->shortname);
+    $PAGE->add_body_class($section);
     $PAGE->navbar->add(get_string('surveypro_responses', 'mod_surveypro'));
     // Is it useful? $PAGE->add_body_class('mediumwidth');.
     $utilitypageman->manage_editbutton($edit);
@@ -317,6 +319,7 @@ if ($section == 'submissionform') {
     $PAGE->set_cm($cm);
     $PAGE->set_title($surveypro->name);
     $PAGE->set_heading($course->shortname);
+    $PAGE->add_body_class($section);
     switch ($mode) {
         case SURVEYPRO_NEWRESPONSEMODE:
             $PAGE->navbar->add(get_string('surveypro_insert', 'mod_surveypro'));
@@ -421,6 +424,7 @@ if ($section == 'searchsubmissions') {
     $PAGE->set_cm($cm);
     $PAGE->set_title($surveypro->name);
     $PAGE->set_heading($course->shortname);
+    $PAGE->add_body_class($section);
     $PAGE->navbar->add(get_string('surveypro_view_search', 'mod_surveypro'));
     // Is it useful? $PAGE->add_body_class('mediumwidth');.
     $utilitypageman->manage_editbutton($edit);
