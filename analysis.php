@@ -34,6 +34,7 @@ $PAGE->set_url('/mod/surveypro/analysis.php', $urlparams);
 $PAGE->set_context($context);
 $PAGE->set_title('Análisis Cuantitativo');
 $PAGE->set_heading('Análisis Cuantitativo');
+$PAGE->add_body_class('analysis-page');
 
 $submission = $DB->get_record('surveypro_submission', ['id' => $submissionid], '*', MUST_EXIST);
 $user = $DB->get_record('user', ['id' => $submission->userid], '*', MUST_EXIST);
