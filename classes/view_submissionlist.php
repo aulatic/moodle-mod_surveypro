@@ -873,7 +873,7 @@ class view_submissionlist {
                         $link = new \moodle_url('/mod/surveypro/view.php', $paramurl);
                         $paramlink = ['id' => 'edit_submission_'.$submissionsuffix, 'title' => $nonhistoryeditstr];
                         //$icons = $OUTPUT->action_icon($link, $nonhistoryediticn, null, $paramlink);
-						$icons .= '<a href="' . $link . '">Continuar</a>';
+						$icons = '<a href="' . $link . '">Continuar</a>';
                     } else {
                         // Here title and alt depend from $this->surveypro->history.
                         $link = new \moodle_url('/mod/surveypro/view.php', $paramurl);
