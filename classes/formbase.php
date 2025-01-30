@@ -462,14 +462,14 @@ class formbase {
             }
         }
 
-        // Mostrar el fullname obtenido.
+        // Mostrar el fullname obtenido. Agrega el numero de la materia y el total de materias
         echo "<h3>Materia: {$fullname}</h3>\n";
 		
 		$materiaCounts = $this->getMateriaQuestionCount($this->surveypro->id);
 		//print_r($materiaCounts);
 		$pagina = $this->formpage;
 		$progress = $this->getMateriaProgress($pagina, $this->surveypro->id);
-        echo "Progreso de la materia:<br>";
+        //echo "Progreso de la materia:<br>";
 		
 		        // Crear una barra de progreso en HTML puro
         echo '<div style="width: 100%; background-color: #f3f3f3; border: 1px solid #ccc; margin-top: 10px; border-radius: 10px; overflow: hidden;">
