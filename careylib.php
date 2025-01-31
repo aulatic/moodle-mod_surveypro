@@ -1,6 +1,40 @@
 <?php
 
-function get_question_scores($plugin, $itemid) {
+function get_user_custom_images($userid)
+{
+    GLOBAL $CFG;
+    // Ensure you have access to Moodle's global configuration and libraries.
+    require_once($CFG->libdir . '/filelib.php');
+
+    // Get the file storage instance.
+    $fs = get_file_storage();
+
+    // Get the user context for the given user id.
+    $context = context_user::instance($userid);
+
+    // Retrieve all files in the specified file area. 
+    // The parameters are: contextid, component, filearea, itemid, sort order, and whether to include directories.
+    $files = $fs->get_area_files($context->id, 'profilefield_file', 'files_3', 0, 'sortorder, id', false);
+
+    $urlimagenes = array();
+    // Loop through each file and generate its URL.
+    foreach ($files as $file) {
+        $fileurl = moodle_url::make_pluginfile_url(
+            $file->get_contextid(),
+            $file->get_component(),
+            $file->get_filearea(),
+            $file->get_itemid(),
+            $file->get_filepath(),
+            $file->get_filename()
+        );
+        $urlimagenes[] = $fileurl;
+    }
+    return $urlimagenes;
+}
+
+
+function get_question_scores($plugin, $itemid)
+{
     global $DB;
 
     // Determine the table based on the plugin
@@ -32,7 +66,7 @@ function get_question_scores($plugin, $itemid) {
     return [
         'min_score' => $min_score,
         'max_score' => $max_score,
-		'peso' => $record->peso
+        'peso' => $record->peso
     ];
 }
 
@@ -53,10 +87,11 @@ function get_question_scores($plugin, $itemid) {
  * the range and returns it rounded to one decimal place. If the answer matches specific strings like
  * 'idk', 'none', 'incorrect', 'correct', 'mid', etc., it assigns a corresponding score based on
  */
-function transform_answer_to_score($answer, $min_score, $max_score) {
+function transform_answer_to_score($answer, $min_score, $max_score)
+{
 
     if (is_numeric($answer)) {
-        return round($answer,1);
+        return round($answer, 1);
     }
 
     // Transform the answer into a score based on the rules
@@ -71,7 +106,7 @@ function transform_answer_to_score($answer, $min_score, $max_score) {
         case 'correct':
         case 'correct2':
         case 'correct3':
-		case 'yes':
+        case 'yes':
             return $max_score; // Assign maximum score
         case 'mid':
             return ($min_score + $max_score) / 2; // Assign average score
@@ -80,7 +115,8 @@ function transform_answer_to_score($answer, $min_score, $max_score) {
     }
 }
 
-function get_numero_evaluated_items($materiaid, $dimension) {
+function get_numero_evaluated_items($materiaid, $dimension)
+{
     global $DB;
 
     // Validar entradas.
@@ -140,7 +176,8 @@ function get_numero_evaluated_items($materiaid, $dimension) {
  * specific submission ID and item ID. If the answer exists, it fetches and returns the content of the
  * user's answer. If the answer does not exist, it returns 'NC' to indicate that no answer was found.
  */
-function get_user_answer($submissionid, $itemid, $plugin) {
+function get_user_answer($submissionid, $itemid, $plugin)
+{
     global $DB;
 
     // Check if the user's answer exists
@@ -187,86 +224,87 @@ function get_user_answer($submissionid, $itemid, $plugin) {
  * @return The function `map_plugin_answer` takes in parameters ``, ``, and ``,
  * and based on the value of ``, it performs different operations to map and process the answer.
  */
-function map_plugin_answer($itemid, $content, $plugin) {
+function map_plugin_answer($itemid, $content, $plugin)
+{
     global $DB;
 
     if ($content === 'NC') {
         return 'NC';
     }
 
-	if ($plugin == 'careybutton') {
-		$sql = "SELECT options
+    if ($plugin == 'careybutton') {
+        $sql = "SELECT options
 					FROM {surveyprofield_careybutton}
 					WHERE itemid = :itemid";
 
-		$options = $DB->get_field_sql($sql, ['itemid' => $itemid]);
+        $options = $DB->get_field_sql($sql, ['itemid' => $itemid]);
 
-		// Convert options into an array
-		$options_array = explode("\n", $options);
-		$options_map = [];
-		foreach ($options_array as $index => $option) {
-			$parts = explode('::', trim($option));
-			$options_map[$index] = $parts[0]; // Take the first part only
-		}
+        // Convert options into an array
+        $options_array = explode("\n", $options);
+        $options_map = [];
+        foreach ($options_array as $index => $option) {
+            $parts = explode('::', trim($option));
+            $options_map[$index] = $parts[0]; // Take the first part only
+        }
 
-		// Return the mapped answer
-		return $options_map[$content] ?? $content;
-	}
+        // Return the mapped answer
+        return $options_map[$content] ?? $content;
+    }
 
-	if ($plugin == 'sliders') {
-		$sql = "SELECT options, puntajemax, peso
+    if ($plugin == 'sliders') {
+        $sql = "SELECT options, puntajemax, peso
 				FROM {surveyprofield_sliders}
 				WHERE itemid = :itemid";
 
-		$record = $DB->get_record_sql($sql, ['itemid' => $itemid]);
+        $record = $DB->get_record_sql($sql, ['itemid' => $itemid]);
 
-		$options = $record->options;
-		$puntajemax = $record->puntajemax;
-		$peso = $record->peso;
+        $options = $record->options;
+        $puntajemax = $record->puntajemax;
+        $peso = $record->peso;
 
-		$options_array = explode("\n", $options);
-		$selected_indices = explode(';', $content);
+        $options_array = explode("\n", $options);
+        $selected_indices = explode(';', $content);
 
-		// Check for special cases like idk:: or none::
-		$special_case = sliders_check_special_cases($options_array, $selected_indices);
-		if ($special_case !== null) {
-			return $special_case;
-		}
+        // Check for special cases like idk:: or none::
+        $special_case = sliders_check_special_cases($options_array, $selected_indices);
+        if ($special_case !== null) {
+            return $special_case;
+        }
 
-		// Check if the user-selected answers contain '::' with numeric identifiers
-		$contains_numeric_identifiers = false;
-		foreach ($selected_indices as $index => $selected) {
-			if ($selected == '1') {
-				$option = trim($options_array[$index]);
-				if (strpos($option, '::') !== false) {
-					$contains_numeric_identifiers = true;
-					break;
-				}
-			}
-		}
-		
-		
+        // Check if the user-selected answers contain '::' with numeric identifiers
+        $contains_numeric_identifiers = false;
+        foreach ($selected_indices as $index => $selected) {
+            if ($selected == '1') {
+                $option = trim($options_array[$index]);
+                if (strpos($option, '::') !== false) {
+                    $contains_numeric_identifiers = true;
+                    break;
+                }
+            }
+        }
 
-		if ($contains_numeric_identifiers) {
-			$percentaje = sliders_sum_numeric_identifiers($options_array, $selected_indices);
-			
-			return $percentaje * $peso;
-			
-		} else {
-			$percentage = sliders_calculate_selection_percentage($options_array, $selected_indices) / 100;
 
-			// Calculate the final value
-			$value = $puntajemax * $percentage * $peso;
 
-			return $value; // Return the calculated value
-		}
-	}
+        if ($contains_numeric_identifiers) {
+            $percentaje = sliders_sum_numeric_identifiers($options_array, $selected_indices);
+
+            return $percentaje * $peso;
+        } else {
+            $percentage = sliders_calculate_selection_percentage($options_array, $selected_indices) / 100;
+
+            // Calculate the final value
+            $value = $puntajemax * $percentage * $peso;
+
+            return $value; // Return the calculated value
+        }
+    }
 
     return $content;
 }
 
-function sliders_sum_numeric_identifiers($options_array, $selected_indices) {
-	//print_r ($selected_indices);
+function sliders_sum_numeric_identifiers($options_array, $selected_indices)
+{
+    //print_r ($selected_indices);
     $sum = 0;
 
     foreach ($selected_indices as $index => $selected) {
@@ -289,7 +327,8 @@ function sliders_sum_numeric_identifiers($options_array, $selected_indices) {
  * @param array $selected_indices The array of selected indices.
  * @return float The percentage of selected options.
  */
-function sliders_calculate_selection_percentage($options_array, $selected_indices) {
+function sliders_calculate_selection_percentage($options_array, $selected_indices)
+{
     // Filter options to include only those without '::'
     $filtered_options = array_filter($options_array, function ($option) {
         return strpos($option, '::') === false;
@@ -322,7 +361,8 @@ function sliders_calculate_selection_percentage($options_array, $selected_indice
  * @param array $selected_indices The array of selected indices.
  * @return string|null The special case found, or null if no special case is found.
  */
-function sliders_check_special_cases($options_array, $selected_indices) {
+function sliders_check_special_cases($options_array, $selected_indices)
+{
     foreach ($selected_indices as $index => $selected) {
         if ($selected == '1') {
             $option = trim($options_array[$index]);
@@ -351,7 +391,8 @@ function sliders_check_special_cases($options_array, $selected_indices) {
  * element with a dynamic width and color gradient based on the input percentage. The progress bar
  * visually represents the percentage value provided as input.
  */
-function generate_percentage_bar($percentage) {
+function generate_percentage_bar($percentage)
+{
     // Determine the color and bar style based on the percentage
     $bar_style = ''; // Style includes both background and dynamic width
 
@@ -364,7 +405,7 @@ function generate_percentage_bar($percentage) {
     }
 
     // Add dynamic width to the style
-    $width_style = $percentage > 0 
+    $width_style = $percentage > 0
         ? "width: {$percentage}%;"
         : "width: 1%; min-width: 7%;"; // Ensure visibility for 0%
 
@@ -382,7 +423,8 @@ function generate_percentage_bar($percentage) {
 
 
 
-function generar_html_items_evaluados($qid) {
+function generar_html_items_evaluados($qid)
+{
     global $DB;
 
     // 1. Obtener todas las materias asociadas al cuestionario.
@@ -409,11 +451,10 @@ function generar_html_items_evaluados($qid) {
             // Agregar los resultados al HTML.
             $html .= "<h3>Dimensión: $dimension</h3>";
             $html .= "<p>Número de preguntas evaluadas: <strong>" . count($num_items) . "</strong></p>";
-			
-			echo "<pre>";
-			print_r ($num_items);
-			echo "</pre>";
 
+            echo "<pre>";
+            print_r($num_items);
+            echo "</pre>";
         }
     }
 
@@ -421,7 +462,8 @@ function generar_html_items_evaluados($qid) {
     return $html;
 }
 
-function verificar_errores_usointerno($qid) {
+function verificar_errores_usointerno($qid)
+{
     global $DB;
 
     // Listado de tablas a verificar.
@@ -466,7 +508,8 @@ function verificar_errores_usointerno($qid) {
 }
 
 
-function extraer_indicadores_respuestas($itemid, $table) {
+function extraer_indicadores_respuestas($itemid, $table)
+{
     global $DB;
 
     // Validar entradas.
@@ -485,7 +528,7 @@ function extraer_indicadores_respuestas($itemid, $table) {
 
     // Dividir las opciones por líneas.
     $lines = explode("\n", $options);
-	
+
     $indicadores = [];
     foreach ($lines as $line) {
         // Buscar la parte antes de '::'.
@@ -501,7 +544,8 @@ function extraer_indicadores_respuestas($itemid, $table) {
 }
 
 
-function procesar_items_tabla($table, $qid) {
+function procesar_items_tabla($table, $qid)
+{
     global $DB;
 
     // Validar entrada.
@@ -533,14 +577,14 @@ function procesar_items_tabla($table, $qid) {
 
         try {
             $indicadores = extraer_indicadores_respuestas($item->id, $table);
-			
-						 // Verificar para `surveyprofield_careybutton`: indicadores válidos.
+
+            // Verificar para `surveyprofield_careybutton`: indicadores válidos.
             if ($table === 'surveyprofield_careybutton') {
                 $valid_sets = [
                     ['correct', 'incorrect'],
                     ['correct', 'incorrect', 'idk'],
-					['correct', 'mid', 'incorrect', 'idk'],
-					['correct', 'mid', 'incorrect']
+                    ['correct', 'mid', 'incorrect', 'idk'],
+                    ['correct', 'mid', 'incorrect']
                 ];
 
                 sort($indicadores);
@@ -566,15 +610,13 @@ function procesar_items_tabla($table, $qid) {
                 echo "<li>Indicador: $indicador</li>";
             }
             echo "</ul>";
-			
-			// Verificar si en la tabla `sliders` ningún indicador es "none" o "incorrect".
+
+            // Verificar si en la tabla `sliders` ningún indicador es "none" o "incorrect".
             if ($table === 'surveyprofield_sliders') {
                 if (!in_array('none', $indicadores) && !in_array('incorrect', $indicadores)) {
                     echo "<p style='color:orange;'>Warning: Ningún indicador es 'none' o 'incorrect' para el ítem ID {$item->id}.</p>";
                 }
             }
-			
-
         } catch (Exception $e) {
             echo "<p>Error procesando ítem ID {$item->id}: " . $e->getMessage() . "</p>";
         }
@@ -588,7 +630,8 @@ function procesar_items_tabla($table, $qid) {
  * @param int $envioid ID del envío (submissionid).
  * @return int|null Número de la última página contestada o null si no se encuentra.
  */
-function obtener_ultima_pagina_contestada($encuestaid, $envioid) {
+function obtener_ultima_pagina_contestada($encuestaid, $envioid)
+{
     global $DB;
 
     // Paso 1: Obtener el último ID de respuesta (id en surveypro_answer) para el envío dado
@@ -625,7 +668,8 @@ function obtener_ultima_pagina_contestada($encuestaid, $envioid) {
  * @return object|null The full record from the plugin table, or null if not found.
  * @throws dml_exception
  */
-function get_plugin_record_by_itemid($itemid) {
+function get_plugin_record_by_itemid($itemid)
+{
     global $DB;
 
     // Step 1: Get the plugin from the mdl_surveypro_item table.
