@@ -411,7 +411,7 @@ class formbase {
                 $unaccesiblepagesnote = '';
             }
 			if (is_siteadmin()) {
-            	echo $OUTPUT->heading(get_string('pagexofy', 'mod_surveypro', $a).' '.$unaccesiblepagesnote);
+            	//echo $OUTPUT->heading(get_string('pagexofy', 'mod_surveypro', $a).' '.$unaccesiblepagesnote);
 			}
         }
 		
