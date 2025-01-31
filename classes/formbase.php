@@ -33,7 +33,8 @@ use mod_surveypro\utility_layout;
  * @copyright 2013 onwards kordan <stringapiccola@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class formbase {
+class formbase
+{
 
     /**
      * @var object Course module object
@@ -92,7 +93,8 @@ class formbase {
      * @param object $context
      * @param object $surveypro
      */
-    public function __construct($cm, $context, $surveypro) {
+    public function __construct($cm, $context, $surveypro)
+    {
         $this->cm = $cm;
         $this->context = $context;
         $this->surveypro = $surveypro;
@@ -110,7 +112,8 @@ class formbase {
      * a simple user may browse the surveypro only from page 2 to $userformpagecount.
      * I am looking for these new boundary (that will be === with 1 and $userformpagecount in 99% of cases).
      */
-    public function set_user_boundary_formpages() {
+    public function set_user_boundary_formpages()
+    {
         global $DB;
 
         $canaccessreserveditems = has_capability('mod/surveypro:accessreserveditems', $this->context);
@@ -159,7 +162,8 @@ class formbase {
      * @param int $startingpage
      * @return void
      */
-    public function next_not_empty_page($rightdirection, $startingpage=null) {
+    public function next_not_empty_page($rightdirection, $startingpage = null)
+    {
         if ($startingpage === null) {
             $startingpage = $this->get_formpage();
         }
@@ -212,13 +216,19 @@ class formbase {
      * @param int $formpage
      * @return bool
      */
-    private function page_has_items($formpage) {
+    private function page_has_items($formpage)
+    {
         global $DB;
 
         $canaccessreserveditems = has_capability('mod/surveypro:accessreserveditems', $this->context);
 
         [$where, $params] = surveypro_fetch_items_seeds(
-            $this->surveypro->id, true, $canaccessreserveditems, null, null, $formpage
+            $this->surveypro->id,
+            true,
+            $canaccessreserveditems,
+            null,
+            null,
+            $formpage
         );
         // Here I can not use get_recordset_select because I could browse returned records twice.
         $itemseeds = $DB->get_records_select('surveypro_item', $where, $params, 'sortindex', 'id, parentid, parentvalue');
@@ -248,7 +258,8 @@ class formbase {
      *
      * @return void
      */
-    public function noitem_stopexecution() {
+    public function noitem_stopexecution()
+    {
         global $COURSE, $OUTPUT;
 
         $canaccessreserveditems = has_capability('mod/surveypro:accessreserveditems', $this->context);
@@ -282,7 +293,8 @@ class formbase {
      *
      * @return array
      */
-    public function get_prefill_data() {
+    public function get_prefill_data()
+    {
         global $DB;
 
         $prefill = [];
@@ -310,8 +322,9 @@ class formbase {
 
         return $prefill;
     }
-	
-    public function getMateriaQuestionCount($surveyid) {
+
+    public function getMateriaQuestionCount($surveyid)
+    {
         global $DB;
         // Prepare the associative array to hold idmateria and question count
         $result = [];
@@ -331,7 +344,7 @@ class formbase {
         JOIN {surveypro_item} si ON si.id = combined_questions.itemid
         WHERE si.surveyproid = :surveyproid
         GROUP BY combined_questions.idmateria";
-            
+
             // Execute the query using Moodle's $DB API
             $params = ['surveyproid' => $surveyid];
             $records = $DB->get_records_sql($sql, $params);
@@ -340,8 +353,8 @@ class formbase {
             foreach ($records as $idmateria => $record) {
                 $result[$idmateria] = $record->question_count;
             }
-			
-			// If surveyid is 2, fijamos la primera materia en 8 páginas 
+
+            // If surveyid is 2, fijamos la primera materia en 8 páginas 
             if ($surveyid == 2) {
                 if (isset($result[0])) {
                     $result[0] = 7;
@@ -356,40 +369,41 @@ class formbase {
 
         return $result;
     }
-	
-	    /**
+
+    /**
      * Calculate and return the percentage progress on the current materia.
      *
      * @param int $currentPage The current page number.
      * @param int $surveyid The survey ID.
      * @return float The progress percentage of the current materia.
      */
-	public function getMateriaProgress($currentPage, $surveyid) {
-		$materiaCounts = $this->getMateriaQuestionCount($surveyid);
+    public function getMateriaProgress($currentPage, $surveyid)
+    {
+        $materiaCounts = $this->getMateriaQuestionCount($surveyid);
 
-		$cumulativeQuestions = 0;
-		$currentMateriaQuestions = 0;
+        $cumulativeQuestions = 0;
+        $currentMateriaQuestions = 0;
 
-		foreach ($materiaCounts as $idmateria => $questionCount) {
-			$cumulativeQuestions += $questionCount;
+        foreach ($materiaCounts as $idmateria => $questionCount) {
+            $cumulativeQuestions += $questionCount;
 
-			if ($cumulativeQuestions >= $currentPage) {
-				$currentMateriaQuestions = $questionCount;
-				$questionsBeforeCurrentMateria = $cumulativeQuestions - $currentMateriaQuestions;
-				$questionsOnCurrentPage = $currentPage - $questionsBeforeCurrentMateria;
+            if ($cumulativeQuestions >= $currentPage) {
+                $currentMateriaQuestions = $questionCount;
+                $questionsBeforeCurrentMateria = $cumulativeQuestions - $currentMateriaQuestions;
+                $questionsOnCurrentPage = $currentPage - $questionsBeforeCurrentMateria;
 
-				// Adjust numerator and denominator to exclude the "non-question" step
-				$adjustedNumerator = max(0, $questionsOnCurrentPage - 1);
-				$adjustedDenominator = max(1, $currentMateriaQuestions - 1);
+                // Adjust numerator and denominator to exclude the "non-question" step
+                $adjustedNumerator = max(0, $questionsOnCurrentPage - 1);
+                $adjustedDenominator = max(1, $currentMateriaQuestions - 1);
 
-				$progressPercentage = ($adjustedNumerator / $adjustedDenominator) * 100;
+                $progressPercentage = ($adjustedNumerator / $adjustedDenominator) * 100;
 
-				return min(100, max(0, $progressPercentage));
-			}
-		}
+                return min(100, max(0, $progressPercentage));
+            }
+        }
 
-		return 100; // If we've reached beyond all questions, return 100%
-	}
+        return 100; // If we've reached beyond all questions, return 100%
+    }
 
 
     /**
@@ -397,7 +411,8 @@ class formbase {
      *
      * @return void
      */
-    public function display_page_x_of_y() {
+    public function display_page_x_of_y()
+    {
         global $OUTPUT, $DB;
 
         if ($this->userformpagecount > 1) {
@@ -405,38 +420,43 @@ class formbase {
             $a->formpage = $this->formpage;
             $a->userformpagecount = $this->userformpagecount;
 
-            if ( ($this->userfirstpage > 1) || ($this->userlastpage < $this->userformpagecount) ) {
+            if (($this->userfirstpage > 1) || ($this->userlastpage < $this->userformpagecount)) {
                 $unaccesiblepagesnote = get_string('unaccesiblepages_note', 'mod_surveypro');
             } else {
                 $unaccesiblepagesnote = '';
             }
-			if (is_siteadmin()) {
-            	//echo $OUTPUT->heading(get_string('pagexofy', 'mod_surveypro', $a).' '.$unaccesiblepagesnote);
-			}
+            if (is_siteadmin()) {
+                //echo $OUTPUT->heading(get_string('pagexofy', 'mod_surveypro', $a).' '.$unaccesiblepagesnote);
+            }
         }
-		
+
         // Obtener los ítems de la página actual.
         $canaccessreserveditems = has_capability('mod/surveypro:accessreserveditems', $this->context);
         [$where, $params] = surveypro_fetch_items_seeds(
-            $this->surveypro->id, true, $canaccessreserveditems, null, null, $this->formpage
+            $this->surveypro->id,
+            true,
+            $canaccessreserveditems,
+            null,
+            null,
+            $this->formpage
         );
-		
-		// Obtener todos los ítems de la página actual desde la base de datos.
+
+        // Obtener todos los ítems de la página actual desde la base de datos.
         $itemseeds = $DB->get_records_select('surveypro_item', $where, $params, 'sortindex', 'id, parentid, parentvalue, plugin, type');
 
- 		// Variable para almacenar el último idmateria encontrado.
+        // Variable para almacenar el último idmateria encontrado.
         $last_idmateria = 0;
 
         foreach ($itemseeds as $item) {
-			
-			//debug
-			//print_r ($item);
-			
+
+            //debug
+            //print_r ($item);
+
             // Obtener información adicional del ítem de la tabla específica del plugin.
             $plugin_table = "surveypro" . $item->type . "_" . $item->plugin;
-			
-			//debug
-			//echo "plugin" . $item->plugin . "id" . $item->id;
+
+            //debug
+            //echo "plugin" . $item->plugin . "id" . $item->id;
 
             try {
                 $plugin_data = $DB->get_record($plugin_table, ['itemid' => $item->id]);
@@ -449,7 +469,7 @@ class formbase {
                 echo "Error al obtener información del ítem desde la tabla {$plugin_table}: " . $e->getMessage() . "\n";
             }
         }
-		// Consultar el fullname de la materia correspondiente.
+        // Consultar el fullname de la materia correspondiente.
         $fullname = "Información de la Organización"; // Valor por defecto si el idmateria es 0.
         if ($last_idmateria !== 0) {
             try {
@@ -464,22 +484,20 @@ class formbase {
 
         // Mostrar el fullname obtenido. Agrega el numero de la materia y el total de materias
         echo "<h3>Materia: {$fullname}</h3>\n";
-		
-		$materiaCounts = $this->getMateriaQuestionCount($this->surveypro->id);
-		//print_r($materiaCounts);
-		$pagina = $this->formpage;
-		$progress = $this->getMateriaProgress($pagina, $this->surveypro->id);
+
+        $materiaCounts = $this->getMateriaQuestionCount($this->surveypro->id);
+        //print_r($materiaCounts);
+        $pagina = $this->formpage;
+        $progress = $this->getMateriaProgress($pagina, $this->surveypro->id);
         //echo "Progreso de la materia:<br>";
-		
-		        // Crear una barra de progreso en HTML puro
-        echo '<div style="width: 100%; background-color: #f3f3f3; border: 1px solid #ccc; margin-top: 10px; border-radius: 10px; overflow: hidden;">
-                <div style="width: ' . $progress . '%; background-color: #4caf50; height: 20px; text-align: center; color: white; line-height: 20px; border-radius: 10px 0 0 10px;">
-                    ' . round($progress, 2) . '%
+
+        // Crear una barra de progreso en HTML puro
+        echo '<div class="progreso-materia" style="width: 100%; background-color: #f3f3f3; border: 1px solid #ccc; margin-top: 10px; border-radius: 10px; overflow: hidden;">
+                <div class="progreso-inner" style="width: ' . $progress . '%; background-color: #4caf50; height: 20px; text-align: center; color: white; line-height: 20px; border-radius: 10px 0 0 10px;">
+                    ' . round($progress, 1) . '%
                 </div>
               </div>
-			  <br><br>';
-		
-		
+			  <br>';
     }
 
     /**
@@ -487,10 +505,11 @@ class formbase {
      *
      * @return void
      */
-    public function warning_submission_copy() {
+    public function warning_submission_copy()
+    {
         global $OUTPUT;
 
-        if ( (!empty($this->surveypro->history)) && (!empty($this->submissionid)) ) {
+        if ((!empty($this->surveypro->history)) && (!empty($this->submissionid))) {
             echo $OUTPUT->notification(get_string('editingcopy', 'mod_surveypro'), 'notifysuccess');
         }
     }
@@ -503,7 +522,8 @@ class formbase {
      * @param int $submissionid
      * @return void
      */
-    public function set_submissionid($submissionid) {
+    public function set_submissionid($submissionid)
+    {
         $this->submissionid = $submissionid;
     }
 
@@ -513,7 +533,8 @@ class formbase {
      * @param int $userformpagecount
      * @return void
      */
-    public function set_userformpagecount($userformpagecount) {
+    public function set_userformpagecount($userformpagecount)
+    {
         $this->userformpagecount = $userformpagecount;
     }
 
@@ -523,7 +544,8 @@ class formbase {
      * @param int $formpage
      * @return void
      */
-    public function set_formpage($formpage) {
+    public function set_formpage($formpage)
+    {
         $this->formpage = $formpage;
     }
 
@@ -533,7 +555,8 @@ class formbase {
      * @param int $nextpage
      * @return void
      */
-    public function set_nextpage($nextpage) {
+    public function set_nextpage($nextpage)
+    {
         $this->nextpage = $nextpage;
     }
 
@@ -543,7 +566,8 @@ class formbase {
      * @param int $userfirstpage
      * @return void
      */
-    public function set_userfirstpage($userfirstpage) {
+    public function set_userfirstpage($userfirstpage)
+    {
         $this->userfirstpage = $userfirstpage;
     }
 
@@ -553,7 +577,8 @@ class formbase {
      * @param int $userlastpage
      * @return void
      */
-    public function set_userlastpage($userlastpage) {
+    public function set_userlastpage($userlastpage)
+    {
         $this->userlastpage = $userlastpage;
     }
 
@@ -563,7 +588,8 @@ class formbase {
      * @param int $overflowpage
      * @return void
      */
-    public function set_overflowpage($overflowpage) {
+    public function set_overflowpage($overflowpage)
+    {
         $this->overflowpage = $overflowpage;
     }
 
@@ -574,7 +600,8 @@ class formbase {
      *
      * @return the content of $submissionid property
      */
-    public function get_submissionid() {
+    public function get_submissionid()
+    {
         return $this->submissionid;
     }
 
@@ -583,7 +610,8 @@ class formbase {
      *
      * @return the content of $formpage property
      */
-    public function get_formpage() {
+    public function get_formpage()
+    {
         return $this->formpage;
     }
 
@@ -592,7 +620,8 @@ class formbase {
      *
      * @return the content of $userformpagecount property
      */
-    public function get_userformpagecount() {
+    public function get_userformpagecount()
+    {
         return $this->userformpagecount;
     }
 
@@ -601,7 +630,8 @@ class formbase {
      *
      * @return the content of $nextpage property
      */
-    public function get_nextpage() {
+    public function get_nextpage()
+    {
         return $this->nextpage;
     }
 
@@ -610,7 +640,8 @@ class formbase {
      *
      * @return the content of $userfirstpage property
      */
-    public function get_userfirstpage() {
+    public function get_userfirstpage()
+    {
         return $this->userfirstpage;
     }
 
@@ -619,7 +650,8 @@ class formbase {
      *
      * @return the content of $userlastpage property
      */
-    public function get_userlastpage() {
+    public function get_userlastpage()
+    {
         return $this->userlastpage;
     }
 
@@ -628,7 +660,8 @@ class formbase {
      *
      * @return the content of $overflowpage property
      */
-    public function get_overflowpage() {
+    public function get_overflowpage()
+    {
         return $this->overflowpage;
     }
 }
