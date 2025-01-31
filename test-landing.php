@@ -9,8 +9,9 @@ require_once(dirname(__FILE__) . '/careylib.php');
 // Ensure you have access to Moodle's global configuration and libraries.
 require_once($CFG->libdir . '/filelib.php');
 
-// Replace with the actual user id.
-$userid = 42;
+//Get the user id from the actual user
+$userid = $USER->id;
+
 
 // Get the file storage instance.
 $fs = get_file_storage();
