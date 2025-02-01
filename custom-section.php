@@ -29,9 +29,7 @@ if ($imageCount > 0) {
 
     // Close the Bootstrap row.
     echo '</div>';
-} else {
-    echo '<p>No images available.</p>';
-}
+} 
 //add new row in two columns, with an image in one side and a title and text in the other
 echo '<div class="row imagen-text standard-section">';
 echo '<div class="col-md-6">';
