@@ -109,6 +109,8 @@ if ($section == 'cover') {
     } else {
         $coverman->display_cover();
     }
+    //incluir seccion completa que diseñaremos en otro archivo
+    include('custom-section.php');
 }
 
 // MARK submissionslist.
