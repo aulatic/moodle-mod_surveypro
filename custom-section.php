@@ -35,7 +35,7 @@ if ($imageCount > 0) {
 //add new row in two columns, with an image in one side and a title and text in the other
 echo '<div class="row imagen-text standard-section">';
 echo '<div class="col-md-6">';
-echo '<img src="https://placecats.com/300/200?fit=contain&position=top" alt="User Image" class="img-responsive" />';
+echo '<img src="https://placecats.com/bella/300/200?fit=contain&position=top" alt="User Image" class="img-responsive" />';
 echo '</div>';
 echo '<div class="col-md-6">';
 echo '<h2>Lorem Ipsum</h2>';
@@ -49,7 +49,7 @@ echo '<h2>Title</h2>';
 echo '<p>Text</p>';
 echo '</div>';
 echo '<div class="col-md-6">';
-echo '<img src="https://placecats.com/300/200?fit=contain&position=top" alt="User Image" class="img-responsive" />';
+echo '<img src="https://placecats.com/bella/300/200?fit=contain&position=top" alt="User Image" class="img-responsive" />';
 echo '</div>';
 echo '</div>';
 //add a final column with a titte and text and a button
