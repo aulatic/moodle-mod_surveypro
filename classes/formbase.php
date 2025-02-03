@@ -492,7 +492,7 @@ class formbase
         //echo "Progreso de la materia:<br>";
 
         // Crear una barra de progreso en HTML puro
-        echo '<div class="progreso-materia" style="width: 100%;>
+        echo '<div class="progreso-materia" style="width: 100%;">
                 <div class="progreso-inner" style="width: ' . $progress . '%;">
                     ' . round($progress, 1) . '%
                 </div>
