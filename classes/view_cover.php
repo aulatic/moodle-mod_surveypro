@@ -179,6 +179,9 @@ class view_cover {
                 $message = get_string('cannotsubmittoolate', 'mod_surveypro', userdate($this->surveypro->timeclose));
                 echo $OUTPUT->notification($message, 'notifyproblem');
             } else if (($this->surveypro->maxentries > 0) && ($next >= $this->surveypro->maxentries)) {
+                $paramurl = ['s' => $this->cm->instance, 'area' => 'surveypro', 'section' => 'submissionslist'];
+                $url = new \moodle_url('/mod/surveypro/view.php', $paramurl);
+                redirect($url);
                 $message = get_string('nomoresubmissionsallowed', 'mod_surveypro', $this->surveypro->maxentries);
                 if ($inprogress) {
                     $a = new \stdClass();
@@ -189,9 +192,7 @@ class view_cover {
                     $message .= '.';
                 }
                 echo $OUTPUT->notification($message, 'notifyproblem');
-				 $paramurl = ['s' => $this->cm->instance, 'area' => 'surveypro', 'section' => 'submissionslist'];
-   				 $url = new \moodle_url('/mod/surveypro/view.php', $paramurl);
-				redirect($url);
+
 
             }
         }
