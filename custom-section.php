@@ -36,25 +36,40 @@ echo '<div class="col-md-6">';
 echo '<img src="https://placecats.com/bella/300/200?fit=contain&position=top" alt="User Image" class="img-responsive" />';
 echo '</div>';
 echo '<div class="col-md-6">';
-echo '<h2>Lorem Ipsum</h2>';
-echo '<p>Texto de prueba para rellenar etc</p>';
+//echo '<h2>Lorem Ipsum</h2>';
+echo '<p>La plataforma de autodiagnóstico dispone de un cuestionario que se ajusta a las
+necesidades específicas de la Empresa. Está compuesto inicialmente por 20 materias,
+las que se despliegan según sus respuestas, de modo tal que sólo deberá responder
+las preguntas que sean necesarias. Puede completarlo a su propio ritmo, pausando y
+retomando cuando lo desee, sin la presión de un límite de tiempo. Esta metodología y
+tecnología permite reducir la brecha de tiempo y recursos que antes requería el
+proceso inicial de entrevistas, reduciendo las entrevistas a las estrictamente necesarias
+o confirmatorias y focalizando el trabajo de campo de manera eficiente.</p>';
 echo '</div>';
 echo '</div>';
-//add new row in two columns, with a title and text in one side and an image in the other
+
+
 echo '<div class="row imagen-text standard-section">';
 echo '<div class="col-md-6">';
-echo '<h2>Title</h2>';
-echo '<p>Text</p>';
+
+
+echo '<p>Los resultados se presentan en un dashboard obtenido mediante análisis de datos. Se
+obtiene una evaluación integral, que comprende 3 niveles: (1) percepción de
+cumplimiento; (2) conocimiento de la Ley de Protección de Datos y (3) cumplimiento
+efectivo de la misma en la Empresa. Los resultados se muestran tanto a nivel general
+como por materia, permitiéndole identificar áreas que requieren refuerzo.</p>';
 echo '</div>';
 echo '<div class="col-md-6">';
 echo '<img src="https://placecats.com/bella/300/200?fit=contain&position=top" alt="User Image" class="img-responsive" />';
 echo '</div>';
 echo '</div>';
-//add a final column with a titte and text and a button
-echo '<div class="row imagen-text standard-section">';
+
+
+/* echo '<div class="row imagen-text standard-section">';
 echo '<div class="col-md-12">';
 echo '<h2>Title</h2>';
 echo '<p>Text</p>';
 echo '<button type="button" class="btn btn-primary">Click me!</button>';
 echo '</div>';
 echo '</div>';
+ */
