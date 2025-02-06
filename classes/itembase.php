@@ -1792,7 +1792,7 @@ EOS;
                 if ($requiredValue === '1' && $answerValue === '1') {
                     $debug_output .= "<p>Coincidencia encontrada en índice $index, retornando true</p>";
                     if (is_siteadmin()) {
-                        echo $debug_output;
+                        //echo $debug_output;
                     }
 					//die();
                     return true;
@@ -1802,7 +1802,7 @@ EOS;
             // Si no se encontró ninguna coincidencia
             $debug_output .= "<p>No se encontraron coincidencias, retornando false</p>";
             if (is_siteadmin()) {
-                echo $debug_output;
+                //echo $debug_output;
             }
             return false;
         } elseif (in_array($plugin_type, ['careybutton', 'radiobutton'])) {
@@ -1812,7 +1812,7 @@ EOS;
 			if ($givenanswer === null || $givenanswer === '') {
 				$debug_output = "<p>Error: 'givenanswer' no está configurado o es vacío, retornando false.</p>";
 				if (is_siteadmin()) {
-					echo $debug_output;
+					//echo $debug_output;
 				}
 				return false;
 			}
@@ -1822,13 +1822,13 @@ EOS;
             if (in_array($givenanswer, $parentValues)) {
                 $debug_output .= "<p>El valor dado ({$givenanswer}) está en el conjunto de valores aceptables (" . implode(', ', $parentValues) . "), retornando true.</p>";
                 if (is_siteadmin()) {
-                    echo $debug_output;
+                    //echo $debug_output;
                 }
                 return true;
             } else {
                 $debug_output .= "<p>El valor dado ({$givenanswer}) no coincide con los valores aceptables (" . implode(', ', $parentValues) . "), retornando false.</p>";
                  if (is_siteadmin()) {
-                    echo $debug_output;
+                    //echo $debug_output;
                 }
 				//die();
                 return false;
@@ -1842,7 +1842,7 @@ EOS;
         // Imprimir toda la información de depuración al final si el usuario es administrador
         if (is_siteadmin()) {
 		//if (true) {
-            echo $debug_output;
+            //echo $debug_output;
         }
 		
         return $result;
