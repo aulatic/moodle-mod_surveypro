@@ -34,9 +34,9 @@ use mod_surveypro\view_submissionsearch;
 use mod_surveypro\local\form\userform;
 use mod_surveypro\local\form\usersearch;
 
-require_once(dirname(__FILE__).'/../../config.php');
-require_once(dirname(__FILE__).'/lib.php');
-require_once(dirname(__FILE__).'/careylib.php');
+require_once(dirname(__FILE__) . '/../../config.php');
+require_once(dirname(__FILE__) . '/lib.php');
+require_once(dirname(__FILE__) . '/careylib.php');
 
 $defaultsection = surveypro_get_defaults_section_per_area('surveypro');
 
@@ -48,8 +48,8 @@ $edit = optional_param('edit', -1, PARAM_BOOL);
 // Verify I used correct names all along the module code.
 $validsections = ['cover', 'submissionslist', 'submissionform', 'searchsubmissions'];
 if (!in_array($section, $validsections)) {
-    $message = 'The section param \''.$section.'\' is invalid.';
-    debugging('Error at line '.__LINE__.' of file '.__FILE__.'. '.$message , DEBUG_DEVELOPER);
+    $message = 'The section param \'' . $section . '\' is invalid.';
+    debugging('Error at line ' . __LINE__ . ' of file ' . __FILE__ . '. ' . $message, DEBUG_DEVELOPER);
 }
 // End of: Verify I used correct names all along the module code.
 
@@ -68,16 +68,7 @@ $context = \context_module::instance($cm->id);
 // Utilitypage is going to be used in each section. This is the reason why I load it here.
 $utilitypageman = new utility_page($cm, $surveypro);
 
-//Early redirection if user has in progress submission
-$utilitylayoutman = new utility_layout($cm, $surveypro);
-$inprogress = $utilitylayoutman->has_submissions(true, SURVEYPRO_STATUSINPROGRESS, $USER->id);
-if ($inprogress > 0) {
-    $paramurl = ['s' => $cm->instance, 'area' => 'surveypro', 'section' => 'submissionslist'];
-    $url = new \moodle_url('/mod/surveypro/view.php', $paramurl);
-    redirect($url);
-}
-//END Early redirection if user has in progress submission.
-//Idea: llevar al usuario directo a la última página contestada
+
 
 // MARK cover.
 if ($section == 'cover') {
@@ -107,6 +98,17 @@ if ($section == 'cover') {
     $PAGE->navbar->add(get_string('surveypro_dashboard', 'mod_surveypro'));
     // Is it useful? $PAGE->add_body_class('mediumwidth');.
     $utilitypageman->manage_editbutton($edit);
+
+    //Early redirection if user has in progress submission
+    $utilitylayoutman = new utility_layout($cm, $surveypro);
+    $inprogress = $utilitylayoutman->has_submissions(true, SURVEYPRO_STATUSINPROGRESS, $USER->id);
+    if ($inprogress > 0) {
+        $paramurl = ['s' => $cm->instance, 'area' => 'surveypro', 'section' => 'submissionslist'];
+        $url = new \moodle_url('/mod/surveypro/view.php', $paramurl);
+        redirect($url);
+    }
+    //END Early redirection if user has in progress submission.
+    //Idea: llevar al usuario directo a la última página contestada
 
     // Output starts here.
     echo $OUTPUT->header();
@@ -242,9 +244,9 @@ if ($section == 'submissionform') {
         $nextpage = $submissionformman->get_nextpage(); // The page of the form to select subset of fields
         $submissionformman->set_formpage($nextpage);
     }
-	if ($begin == 9) {
-		$ultima_pagina = obtener_ultima_pagina_contestada($s, $submissionid);
-		$submissionformman->set_formpage($ultima_pagina);
+    if ($begin == 9) {
+        $ultima_pagina = obtener_ultima_pagina_contestada($s, $submissionid);
+        $submissionformman->set_formpage($ultima_pagina);
     }
     $formparams->formpage = $submissionformman->get_formpage(); // The page of the form to select subset of fields
     // End of: prepare params for the form.
@@ -350,8 +352,8 @@ if ($section == 'submissionform') {
             // It should never be verified.
             break;
         default:
-            $message = 'Unexpected $mode = '.$mode;
-            debugging('Error at line '.__LINE__.' of '.__FILE__.'. '.$message , DEBUG_DEVELOPER);
+            $message = 'Unexpected $mode = ' . $mode;
+            debugging('Error at line ' . __LINE__ . ' of ' . __FILE__ . '. ' . $message, DEBUG_DEVELOPER);
     }
     // Is it useful? $PAGE->add_body_class('mediumwidth');.
     $utilitypageman->manage_editbutton($edit);
