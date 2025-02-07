@@ -60,7 +60,7 @@ efectivo de la misma en la Empresa. Los resultados se muestran tanto a nivel gen
 como por materia, permitiéndole identificar áreas que requieren refuerzo.</p>';
 echo '</div>';
 echo '<div class="col-md-6">';
-echo '<img src="https://placecats.com/bella/300/200?fit=contain&position=top" alt="User Image" class="img-responsive" />';
+echo '<img src="https://autodiagnostico.carey.cl/webassets/graphs.png" alt="User Image" class="img-responsive" />';
 echo '</div>';
 echo '</div>';
 
