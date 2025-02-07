@@ -35,7 +35,8 @@ use mod_surveypro\utility_submission;
  * @copyright 2013 onwards kordan <stringapiccola@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class view_submissionlist {
+class view_submissionlist
+{
 
     /**
      * @var object Course module object
@@ -84,7 +85,8 @@ class view_submissionlist {
      * @param object $context
      * @param object $surveypro
      */
-    public function __construct($cm, $context, $surveypro) {
+    public function __construct($cm, $context, $surveypro)
+    {
         $this->cm = $cm;
         $this->context = $context;
         $this->surveypro = $surveypro;
@@ -100,7 +102,8 @@ class view_submissionlist {
      * @param string $searchquery
      * @return void
      */
-    public function setup($submissionid, $action, $view, $confirm, $searchquery) {
+    public function setup($submissionid, $action, $view, $confirm, $searchquery)
+    {
         $this->set_submissionid($submissionid);
         $this->set_action($action);
         $this->set_view($view);
@@ -118,7 +121,8 @@ class view_submissionlist {
      * @param int $submissionid
      * @return void
      */
-    public function set_submissionid($submissionid) {
+    public function set_submissionid($submissionid)
+    {
         $this->submissionid = $submissionid;
     }
 
@@ -128,7 +132,8 @@ class view_submissionlist {
      * @param int $action
      * @return void
      */
-    public function set_action($action) {
+    public function set_action($action)
+    {
         $this->action = $action;
     }
 
@@ -138,7 +143,8 @@ class view_submissionlist {
      * @param int $view
      * @return void
      */
-    public function set_view($view) {
+    public function set_view($view)
+    {
         $this->view = $view;
     }
 
@@ -148,7 +154,8 @@ class view_submissionlist {
      * @param int $confirm
      * @return void
      */
-    public function set_confirm($confirm) {
+    public function set_confirm($confirm)
+    {
         $this->confirm = $confirm;
     }
 
@@ -158,7 +165,8 @@ class view_submissionlist {
      * @param string $searchquery
      * @return void
      */
-    public function set_searchquery($searchquery) {
+    public function set_searchquery($searchquery)
+    {
         $this->searchquery = $searchquery;
     }
 
@@ -204,7 +212,8 @@ class view_submissionlist {
      * @param flexible_table $table
      * @return [$sql, $whereparams];
      */
-    public function get_submissions_sql($table) {
+    public function get_submissions_sql($table)
+    {
         global $DB, $COURSE, $USER;
 
         $canviewhiddenactivities = has_capability('moodle/course:viewhiddenactivities', $this->context);
@@ -218,12 +227,12 @@ class view_submissionlist {
         [$enrolsql, $eparams] = get_enrolled_sql($coursecontext);
 
         $sql = 'SELECT COUNT(eu.id)
-                FROM ('.$enrolsql.') eu';
+                FROM (' . $enrolsql . ') eu';
         // If there are not enrolled users, give up!
         if (!$DB->count_records_sql($sql, $eparams)) {
             if (!$canviewhiddenactivities) { // If you are not an admin like.
                 // Prepare an empty SQL to return if conditions force it.
-                $emptysql = 'SELECT DISTINCT s.*, s.id as submissionid'.$userfieldsapi->selects.'
+                $emptysql = 'SELECT DISTINCT s.*, s.id as submissionid' . $userfieldsapi->selects . '
                              FROM {surveypro_submission} s
                                  JOIN {user} u ON u.id = s.userid
                              WHERE u.id = :userid';
@@ -262,7 +271,7 @@ class view_submissionlist {
         if ($canviewhiddenactivities) { // You are a student so make the selection among enrolled users only.
             $whereparams = [];
         } else {
-            $sql .= ' JOIN ('.$enrolsql.') eu ON eu.id = u.id';
+            $sql .= ' JOIN (' . $enrolsql . ') eu ON eu.id = u.id';
             $whereparams = $eparams;
         }
 
@@ -280,20 +289,20 @@ class view_submissionlist {
             $userquery = [];
             foreach ($searchrestrictions as $itemid => $searchrestriction) {
                 $itemseed = $DB->get_record('surveypro_item', ['id' => $itemid], 'type, plugin', MUST_EXIST);
-                $classname = 'surveypro'.$itemseed->type.'_'.$itemseed->plugin.'\item';
+                $classname = 'surveypro' . $itemseed->type . '_' . $itemseed->plugin . '\item';
                 // Ask to the item class how to write the query.
                 [$whereclause, $whereparam] = $classname::response_get_whereclause($itemid, $searchrestriction);
-                $userquery[] = '(a.itemid = '.$itemid.' AND '.$whereclause.')';
-                $whereparams['content_'.$itemid] = $whereparam;
+                $userquery[] = '(a.itemid = ' . $itemid . ' AND ' . $whereclause . ')';
+                $whereparams['content_' . $itemid] = $whereparam;
             }
-            $sqlanswer .= ' WHERE ('.implode(' OR ', $userquery).')';
+            $sqlanswer .= ' WHERE (' . implode(' OR ', $userquery) . ')';
 
             $sqlanswer .= ' GROUP BY a.submissionid';
             $sqlanswer .= ' HAVING matchcount = :matchcount';
             $whereparams['matchcount'] = count($userquery);
 
             // Finally, continue writing $sql.
-            $sql .= ' JOIN ('.$sqlanswer.') a ON a.submissionid = ss.id';
+            $sql .= ' JOIN (' . $sqlanswer . ') a ON a.submissionid = ss.id';
         }
 
         $debug = false;
@@ -315,14 +324,14 @@ class view_submissionlist {
             }
             echo '$mygroups =';
             // Note: print_object($mygroups); // <-- This is better than var_dump but codechecker doesn't like it.
-            echo '<br>count($mygroups) = '.count($mygroups).'<br>';
+            echo '<br>count($mygroups) = ' . count($mygroups) . '<br>';
         }
 
         if (count($mygroups)) { // User is, at least, in a group.
             if ($canseeotherssubmissions && (!$canaccessallgroups)) {
                 $sql .= ' JOIN (SELECT DISTINCT gm.userid
                                 FROM {groups_members} gm
-                                WHERE gm.groupid '.$ingroupsql.') gr ON gr.userid = u.id';
+                                WHERE gm.groupid ' . $ingroupsql . ') gr ON gr.userid = u.id';
                 $whereparams = array_merge($whereparams, $groupsparams);
             }
         }
@@ -339,13 +348,13 @@ class view_submissionlist {
         // Manage table alphabetical filter.
         [$wherefilter, $wherefilterparams] = $table->get_sql_where();
         if ($wherefilter) {
-            $sql .= ' AND '.$wherefilter;
+            $sql .= ' AND ' . $wherefilter;
             $whereparams = $whereparams + $wherefilterparams;
         }
 
         if ($table->get_sql_sort()) {
             // Sort coming from $table->get_sql_sort().
-            $sql .= ' ORDER BY '.$table->get_sql_sort();
+            $sql .= ' ORDER BY ' . $table->get_sql_sort();
         } else {
             $sql .= ' ORDER BY ss.timecreated';
         }
@@ -354,9 +363,9 @@ class view_submissionlist {
         if ($debug) {
             global $CFG;
 
-            $sql2display = preg_replace('~{([a-z_]*)}~', $CFG->prefix.'\1', $sql);
+            $sql2display = preg_replace('~{([a-z_]*)}~', $CFG->prefix . '\1', $sql);
             $sql2display = str_replace('JOIN', '<br>&nbsp;&nbsp;&nbsp;&nbsp;JOIN', $sql2display);
-            echo '$sql2display = '.$sql2display.'<br>';
+            echo '$sql2display = ' . $sql2display . '<br>';
             echo '$whereparams =';
             // Note: print_object($whereparams); // <-- This is better than var_dump but codechecker doesn't like it.
             var_dump($whereparams);
@@ -371,7 +380,8 @@ class view_submissionlist {
      * @param flexible_table $table
      * @return array of cunters
      */
-    public function get_counter($table) {
+    public function get_counter($table)
+    {
         global $DB, $COURSE, $USER;
 
         $canviewhiddenactivities = has_capability('moodle/course:viewhiddenactivities', $this->context);
@@ -381,7 +391,7 @@ class view_submissionlist {
         [$enrolsql, $eparams] = get_enrolled_sql($coursecontext);
 
         $sql = 'SELECT COUNT(eu.id)
-                FROM ('.$enrolsql.') eu';
+                FROM (' . $enrolsql . ') eu';
         // If there are no enrolled people, give up!
         if (!$enrolledusers = $DB->count_records_sql($sql, $eparams)) {
             if (!$canviewhiddenactivities) {
@@ -401,12 +411,12 @@ class view_submissionlist {
         $whereparams = [];
 
         $sqlselectstart = 's.status, COUNT(DISTINCT(s.id)) submissions, ';
-        $sql = 'SELECT '.$sqlselectstart.'COUNT(DISTINCT(u.id)) users';
+        $sql = 'SELECT ' . $sqlselectstart . 'COUNT(DISTINCT(u.id)) users';
         $sql .= ' FROM {surveypro_submission} s
                   JOIN {user} u ON u.id = s.userid';
 
         if (!$canviewhiddenactivities) { // You are a student so make the selection among enrolled users only.
-            $sql .= ' JOIN ('.$enrolsql.') eu ON eu.id = u.id';
+            $sql .= ' JOIN (' . $enrolsql . ') eu ON eu.id = u.id';
         }
 
         if ($this->searchquery) {
@@ -423,20 +433,20 @@ class view_submissionlist {
             $userquery = [];
             foreach ($searchrestrictions as $itemid => $searchrestriction) {
                 $itemseed = $DB->get_record('surveypro_item', ['id' => $itemid], 'type, plugin', MUST_EXIST);
-                $classname = 'surveypro'.$itemseed->type.'_'.$itemseed->plugin.'\item';
+                $classname = 'surveypro' . $itemseed->type . '_' . $itemseed->plugin . '\item';
                 // Ask to the item class how to write the query.
                 [$whereclause, $whereparam] = $classname::response_get_whereclause($itemid, $searchrestriction);
-                $userquery[] = '(a.itemid = '.$itemid.' AND '.$whereclause.')';
-                $whereparams['content_'.$itemid] = $whereparam;
+                $userquery[] = '(a.itemid = ' . $itemid . ' AND ' . $whereclause . ')';
+                $whereparams['content_' . $itemid] = $whereparam;
             }
-            $sqlanswer .= ' WHERE ('.implode(' OR ', $userquery).')';
+            $sqlanswer .= ' WHERE (' . implode(' OR ', $userquery) . ')';
 
             $sqlanswer .= ' GROUP BY a.submissionid';
             $sqlanswer .= ' HAVING matchcount = :matchcount';
             $whereparams['matchcount'] = count($userquery);
 
             // Finally, continue writing $sql.
-            $sql .= ' JOIN ('.$sqlanswer.') a ON a.submissionid = s.id';
+            $sql .= ' JOIN (' . $sqlanswer . ') a ON a.submissionid = s.id';
         }
 
         if ($groupmode && (!$canaccessallgroups)) {
@@ -459,7 +469,7 @@ class view_submissionlist {
         // Manage table alphabetical filter.
         [$wherefilter, $wherefilterparams] = $table->get_sql_where();
         if ($wherefilter) {
-            $sql .= ' AND '.$wherefilter;
+            $sql .= ' AND ' . $wherefilter;
             $whereparams = $whereparams + $wherefilterparams;
         }
 
@@ -503,16 +513,17 @@ class view_submissionlist {
      * @param string $fileurl
      * @return $content with each http url replaced by a direct link
      */
-    private function get_image_file($fileurl) {
+    private function get_image_file($fileurl)
+    {
         global $CFG;
 
-        if (strpos($fileurl, $CFG->wwwroot.'/pluginfile.php') === false) {
+        if (strpos($fileurl, $CFG->wwwroot . '/pluginfile.php') === false) {
             return null;
         }
 
         $fs = get_file_storage();
 
-        $params = \core_text::substr($fileurl, \core_text::strlen($CFG->wwwroot.'/pluginfile.php'));
+        $params = \core_text::substr($fileurl, \core_text::strlen($CFG->wwwroot . '/pluginfile.php'));
         if (\core_text::substr($params, 0, 1) == '?') { // Slasharguments off.
             $pos = strpos($params, 'file=');
             $params = \core_text::substr($params, $pos + 5);
@@ -539,7 +550,7 @@ class view_submissionlist {
         if (empty($params)) {
             $filepath = '/';
         } else {
-            $filepath = '/'.implode('/', $params).'/';
+            $filepath = '/' . implode('/', $params) . '/';
         }
 
         if ($component != 'mod_surveypro') {
@@ -548,7 +559,7 @@ class view_submissionlist {
 
         if (!$file = $fs->get_file($contextid, $component, $filearea, $itemid, $filepath, $filename)) {
             if ($itemid) {
-                $filepath = '/'.$itemid.$filepath; // See if there was no itemid in the originalPath URL.
+                $filepath = '/' . $itemid . $filepath; // See if there was no itemid in the originalPath URL.
                 $itemid = 0;
                 $file = $fs->get_file($contextid, $component, $filename, $itemid, $filepath, $filename);
             }
@@ -569,7 +580,8 @@ class view_submissionlist {
      * @param int $timemodified
      * @return string $headertext
      */
-    private function get_header_text($user, $timecreated, $timemodified) {
+    private function get_header_text($user, $timecreated, $timemodified)
+    {
         $canalwaysseeowner = has_capability('mod/surveypro:alwaysseeowner', $this->context);
 
         $textheader = '';
@@ -593,19 +605,20 @@ class view_submissionlist {
      *
      * @return list() of html for each template
      */
-    private function get_columns_html() {
+    private function get_columns_html()
+    {
         [$col1width, $col2width, $col3width] = $this->get_columns_width();
         $col23width = $col2width + $col3width;
 
         $twocolstemplate = '<table style="width:100%;"><tr>';
-        $twocolstemplate .= '<td style="width:'.$col1width.'%; text-align:left;">@@col1@@</td>';
-        $twocolstemplate .= '<td style="width:'.$col23width.'%; text-align:left;">@@col2@@</td>';
+        $twocolstemplate .= '<td style="width:' . $col1width . '%; text-align:left;">@@col1@@</td>';
+        $twocolstemplate .= '<td style="width:' . $col23width . '%; text-align:left;">@@col2@@</td>';
         $twocolstemplate .= '</tr></table>';
 
         $threecolstemplate = '<table style="width:100%;"><tr>';
-        $threecolstemplate .= '<td style="width:'.$col1width.'%; text-align:left;">@@col1@@</td>';
-        $threecolstemplate .= '<td style="width:'.$col2width.'%; text-align:left;">@@col2@@</td>';
-        $threecolstemplate .= '<td style="width:'.$col3width.'%; text-align:left;">@@col3@@</td>';
+        $threecolstemplate .= '<td style="width:' . $col1width . '%; text-align:left;">@@col1@@</td>';
+        $threecolstemplate .= '<td style="width:' . $col2width . '%; text-align:left;">@@col2@@</td>';
+        $threecolstemplate .= '<td style="width:' . $col3width . '%; text-align:left;">@@col3@@</td>';
         $threecolstemplate .= '</tr></table>';
 
         return [$twocolstemplate, $threecolstemplate];
@@ -616,7 +629,8 @@ class view_submissionlist {
      *
      * @return list() of width of each column
      */
-    private function get_columns_width() {
+    private function get_columns_width()
+    {
         $col1unit = 1;
         $col2unit = 6;
         $col3unit = 3;
@@ -634,7 +648,8 @@ class view_submissionlist {
      *
      * @return list() of width of each column
      */
-    private function get_border_style() {
+    private function get_border_style()
+    {
         $border = [];
         $border['T'] = [];
         $border['T']['width'] = 0.2;
@@ -651,13 +666,48 @@ class view_submissionlist {
      *
      * @return void
      */
-    public function display_submissions_table() {
+    public function display_submissions_table()
+    {
         global $CFG, $OUTPUT, $DB, $COURSE, $USER;
 
-        require_once($CFG->libdir.'/tablelib.php');
+        require_once($CFG->libdir . '/tablelib.php');
 
         $canalwaysseeowner = has_capability('mod/surveypro:alwaysseeowner', $this->context);
         $canseeotherssubmissions = has_capability('mod/surveypro:seeotherssubmissions', $this->context);
+
+        //Validación temprana: Si el usuario NO tiene permisos para ver entregas de otros
+        if (!$canseeotherssubmissions) {
+            // Verificar si el usuario tiene una encuesta EN PROGRESO
+            $inprogress_sql = "SELECT * FROM {surveypro_submission} 
+                           WHERE userid = :userid 
+                             AND surveyproid = :surveyproid 
+                             AND status = :status_inprogress
+                           ORDER BY timecreated DESC LIMIT 1";
+            $inprogress_params = [
+                'userid' => $USER->id,
+                'surveyproid' => $this->surveypro->id,
+                'status_inprogress' => SURVEYPRO_STATUSINPROGRESS
+            ];
+            $inprogress_submission = $DB->get_record_sql($inprogress_sql, $inprogress_params);
+
+            if ($inprogress_submission) {
+                // Mostrar botón "Continuar con tu encuesta" si hay una encuesta en progreso
+                $link = new \moodle_url('/mod/surveypro/view.php', [
+                    's' => $this->cm->instance,
+                    'submissionid' => $inprogress_submission->id,
+                    'mode' => SURVEYPRO_EDITMODE,
+                    'begin' => 9,
+                    'section' => 'submissionform'
+                ]);
+                echo '<div class="continue-survey">';
+                echo '<a class="btn btn-primary" href="' . $link . '">Continuar con tu encuesta</a>';
+                echo '</div>';
+
+                return; // Detener ejecución si hay encuesta en progreso
+            }
+        }
+
+
         $canaccessallgroups = has_capability('moodle/site:accessallgroups', $this->context);
         $caneditownsubmissions = has_capability('mod/surveypro:editownsubmissions', $this->context);
         $caneditotherssubmissions = has_capability('mod/surveypro:editotherssubmissions', $this->context);
@@ -740,9 +790,14 @@ class view_submissionlist {
         $counter = $this->get_counter($table);
         $table->pagesize(20, $counter['closedsubmissions'] + $counter['inprogresssubmissions']);
 
-        $this->display_submissions_overview($counter['enrolled'], $counter['allusers'],
-                                            $counter['closedsubmissions'], $counter['closedusers'],
-                                            $counter['inprogresssubmissions'], $counter['inprogressusers']);
+        $this->display_submissions_overview(
+            $counter['enrolled'],
+            $counter['allusers'],
+            $counter['closedsubmissions'],
+            $counter['closedusers'],
+            $counter['inprogresssubmissions'],
+            $counter['inprogressusers']
+        );
 
         [$sql, $whereparams] = $this->get_submissions_sql($table);
         $submissions = $DB->get_recordset_sql($sql, $whereparams, $table->get_page_start(), $table->get_page_size());
@@ -794,7 +849,7 @@ class view_submissionlist {
             foreach ($submissions as $submission) {
                 // Count each submission.
                 $tablerowcounter++;
-                $submissionsuffix = 'row_'.$tablerowcounter;
+                $submissionsuffix = 'row_' . $tablerowcounter;
 
                 // Before starting, just set some information.
                 $ismine = ($submission->userid == $USER->id);
@@ -817,7 +872,7 @@ class view_submissionlist {
                     // User fullname.
                     $paramurl = ['id' => $submission->userid, 'course' => $COURSE->id];
                     $url = new \moodle_url('/user/view.php', $paramurl);
-                    $tablerow[] = '<a href="'.$url->out().'">'.fullname($submission).'</a>';
+                    $tablerow[] = '<a href="' . $url->out() . '">' . fullname($submission) . '</a>';
                 }
 
                 // Surveypro status.
@@ -862,22 +917,22 @@ class view_submissionlist {
                 }
                 if ($displayediticon) {
                     $paramurl['mode'] = SURVEYPRO_EDITMODE;
-					
-					//$paramurl['begin'] = $ismine ? 9 : 1; // Si es el dueño, comenzar donde la dejó
-					$paramurl['begin'] = $ismine ? 9 : 9; // para efectos de debugueo, comenzar desde el punto donde dejo el usuario siempre
-					
+
+                    //$paramurl['begin'] = $ismine ? 9 : 1; // Si es el dueño, comenzar donde la dejó
+                    $paramurl['begin'] = $ismine ? 9 : 9; // para efectos de debugueo, comenzar desde el punto donde dejo el usuario siempre
+
                     $paramurl['section'] = 'submissionform';
 
                     if ($submission->status == SURVEYPRO_STATUSINPROGRESS) {
                         // Here title and alt are ALWAYS $nonhistoryeditstr.
                         $link = new \moodle_url('/mod/surveypro/view.php', $paramurl);
-                        $paramlink = ['id' => 'edit_submission_'.$submissionsuffix, 'title' => $nonhistoryeditstr];
+                        $paramlink = ['id' => 'edit_submission_' . $submissionsuffix, 'title' => $nonhistoryeditstr];
                         //$icons = $OUTPUT->action_icon($link, $nonhistoryediticn, null, $paramlink);
-						$icons = '<a href="' . $link . '">Continuar</a>';
+                        $icons = '<a href="' . $link . '">Continuar</a>';
                     } else {
                         // Here title and alt depend from $this->surveypro->history.
                         $link = new \moodle_url('/mod/surveypro/view.php', $paramurl);
-                        $paramlink = ['id' => $linkidprefix.$submissionsuffix, 'title' => $attributestr];
+                        $paramlink = ['id' => $linkidprefix . $submissionsuffix, 'title' => $attributestr];
                         $icons = $OUTPUT->action_icon($link, $attributeicn, null, $paramlink);
                     }
                 } else {
@@ -886,7 +941,7 @@ class view_submissionlist {
                     $paramurl['section'] = 'submissionform';
 
                     $link = new \moodle_url('/mod/surveypro/view.php', $paramurl);
-                    $paramlink = ['id' => 'view_submission_'.$submissionsuffix, 'title' => $readonlyaccessstr];
+                    $paramlink = ['id' => 'view_submission_' . $submissionsuffix, 'title' => $readonlyaccessstr];
                     $icons = '<a class="acciones" href="' . $link . '">Ver Respuestas</a>';
                 }
 
@@ -911,7 +966,7 @@ class view_submissionlist {
                         $paramurl['section'] = 'submissionslist';
 
                         $link = new \moodle_url('/mod/surveypro/view.php', $paramurl);
-                        $paramlink = ['id' => 'duplicate_submission_'.$submissionsuffix, 'title' => $duplicatestr];
+                        $paramlink = ['id' => 'duplicate_submission_' . $submissionsuffix, 'title' => $duplicatestr];
                         $icons .= $OUTPUT->action_icon($link, $duplicateicn, null, $paramlink);
                     }
                 }
@@ -934,7 +989,7 @@ class view_submissionlist {
                     $paramurl['section'] = 'submissionslist';
 
                     $link = new \moodle_url('/mod/surveypro/view.php', $paramurl);
-                    $paramlink = ['id' => 'delete_submission_'.$submissionsuffix, 'title' => $deletestr];
+                    $paramlink = ['id' => 'delete_submission_' . $submissionsuffix, 'title' => $deletestr];
                     $icons .= $OUTPUT->action_icon($link, $deleteicn, null, $paramlink);
                 }
 
@@ -959,11 +1014,11 @@ class view_submissionlist {
                     $paramurl['section'] = 'submissionslist';
 
                     $link = new \moodle_url('/mod/surveypro/view.php', $paramurl);
-                    $paramlink = ['id' => 'pdfdownload_submission_'.$submissionsuffix, 'title' => $downloadpdfstr];
+                    $paramlink = ['id' => 'pdfdownload_submission_' . $submissionsuffix, 'title' => $downloadpdfstr];
                     $icons .= '<a class="acciones" href="' . $link . '">Descargar PDF respuestas</a>';
                 }
-				
-				// Download to pdf.
+
+                // Download to pdf.
                 $displayanalisislink = false;
                 if ($submission->status == SURVEYPRO_STATUSINPROGRESS) {
                     $displayanalisislink = false;
@@ -982,7 +1037,7 @@ class view_submissionlist {
                     $paramurl['sesskey'] = sesskey();
 
                     $link = new \moodle_url('/mod/surveypro/analysis.php', $paramurl);
-					$icons .= '<a class="acciones" href="' . $link . '">Analizar</a>';
+                    $icons .= '<a class="acciones" href="' . $link . '">Analizar</a>';
                 }
 
                 $tablerow[] = $icons;
@@ -994,10 +1049,10 @@ class view_submissionlist {
         $submissions->close();
 
         $table->summary = get_string('submissionslist', 'mod_surveypro');
-        
+
         //Solo desplegar tabla a usuarios con permisos
-        if ($canseeotherssubmissions) {        
-        $table->print_html();
+        if ($canseeotherssubmissions) {
+            $table->print_html();
         } else {
             echo "Soy un usuario sin permisos";
         }
@@ -1018,7 +1073,8 @@ class view_submissionlist {
      * @param string $tilast
      * @return void
      */
-    public function show_action_buttons($tifirst, $tilast) {
+    public function show_action_buttons($tifirst, $tilast)
+    {
         global $OUTPUT, $USER;
 
         $utilitylayoutman = new utility_layout($this->cm, $this->surveypro);
@@ -1090,7 +1146,7 @@ class view_submissionlist {
             // This code comes from "public function confirm(" around line 1711 in outputrenderers.php.
             // It is not wrong. The misalign comes from bootstrapbase theme and is present in clean theme too.
             echo $OUTPUT->box_start('generalbox centerpara', 'notice');
-            echo \html_writer::tag('div', $OUTPUT->render($addbutton).$OUTPUT->render($deleteallbutton), ['class' => 'buttons']);
+            echo \html_writer::tag('div', $OUTPUT->render($addbutton) . $OUTPUT->render($deleteallbutton), ['class' => 'buttons']);
             echo $OUTPUT->box_end();
         }
     }
@@ -1100,7 +1156,8 @@ class view_submissionlist {
      *
      * @return void
      */
-    public function trigger_event() {
+    public function trigger_event()
+    {
         // Event: all_submissions_viewed.
         $eventdata = ['context' => $this->context, 'objectid' => $this->surveypro->id];
         $event = \mod_surveypro\event\all_submissions_viewed::create($eventdata);
@@ -1112,7 +1169,8 @@ class view_submissionlist {
      *
      * @return void
      */
-    public function actions_execution() {
+    public function actions_execution()
+    {
         switch ($this->action) {
             case SURVEYPRO_NOACTION:
                 break;
@@ -1165,8 +1223,8 @@ class view_submissionlist {
                 }
                 break;
             default:
-                $message = 'Unexpected $this->action = '.$this->action;
-                debugging('Error at line '.__LINE__.' of '.__FILE__.'. '.$message , DEBUG_DEVELOPER);
+                $message = 'Unexpected $this->action = ' . $this->action;
+                debugging('Error at line ' . __LINE__ . ' of ' . __FILE__ . '. ' . $message, DEBUG_DEVELOPER);
         }
     }
 
@@ -1175,7 +1233,8 @@ class view_submissionlist {
      *
      * @return void
      */
-    public function actions_feedback() {
+    public function actions_feedback()
+    {
         switch ($this->action) {
             case SURVEYPRO_NOACTION:
                 break;
@@ -1189,8 +1248,8 @@ class view_submissionlist {
                 $this->all_submission_deletion_feedback();
                 break;
             default:
-                $message = 'Unexpected $this->action = '.$this->action;
-                debugging('Error at line '.__LINE__.' of '.__FILE__.'. '.$message , DEBUG_DEVELOPER);
+                $message = 'Unexpected $this->action = ' . $this->action;
+                debugging('Error at line ' . __LINE__ . ' of ' . __FILE__ . '. ' . $message, DEBUG_DEVELOPER);
         }
     }
 
@@ -1201,7 +1260,8 @@ class view_submissionlist {
      * @param int $justsubmitted
      * @return void
      */
-    public function show_thanks_page($responsestatus, $justsubmitted) {
+    public function show_thanks_page($responsestatus, $justsubmitted)
+    {
         global $OUTPUT;
 
         if ($responsestatus == SURVEYPRO_MISSINGMANDATORY) {
@@ -1247,7 +1307,7 @@ class view_submissionlist {
 
             echo $OUTPUT->box_start('generalbox centerpara', 'notice');
             echo \html_writer::tag('p', $message);
-            echo \html_writer::tag('div', $OUTPUT->render($onemore).$OUTPUT->render($gotolist), ['class' => 'buttons']);
+            echo \html_writer::tag('div', $OUTPUT->render($onemore) . $OUTPUT->render($gotolist), ['class' => 'buttons']);
             echo $OUTPUT->box_end();
         } else {
             echo $OUTPUT->box($message, 'notice centerpara');
@@ -1267,7 +1327,8 @@ class view_submissionlist {
      *
      * @return void
      */
-    public function one_submission_duplication_feedback() {
+    public function one_submission_duplication_feedback()
+    {
         global $USER, $DB, $OUTPUT;
 
         if ($this->confirm == SURVEYPRO_UNCONFIRMED) {
@@ -1335,7 +1396,8 @@ class view_submissionlist {
      *
      * @return void
      */
-    public function one_submission_deletion_feedback() {
+    public function one_submission_deletion_feedback()
+    {
         global $USER, $DB, $OUTPUT;
 
         if ($this->confirm == SURVEYPRO_UNCONFIRMED) {
@@ -1403,7 +1465,8 @@ class view_submissionlist {
      *
      * @return void
      */
-    public function all_submission_deletion_feedback() {
+    public function all_submission_deletion_feedback()
+    {
         global $OUTPUT;
 
         if ($this->confirm == SURVEYPRO_UNCONFIRMED) {
@@ -1455,9 +1518,14 @@ class view_submissionlist {
      * @param int $inprogressusers
      * @return void
      */
-    public function display_submissions_overview($enrolledusers, $distinctusers,
-                                                 $countclosed, $closedusers,
-                                                 $countinprogress, $inprogressusers) {
+    public function display_submissions_overview(
+        $enrolledusers,
+        $distinctusers,
+        $countclosed,
+        $closedusers,
+        $countinprogress,
+        $inprogressusers
+    ) {
         global $OUTPUT;
 
         $canseeotherssubmissions = has_capability('mod/surveypro:seeotherssubmissions', $this->context);
@@ -1565,7 +1633,8 @@ class view_submissionlist {
      * @param bool $confirm
      * @return void
      */
-    private function prevent_direct_user_input($confirm) {
+    private function prevent_direct_user_input($confirm)
+    {
         global $COURSE, $USER, $DB;
 
         if ($this->action == SURVEYPRO_NOACTION) {
@@ -1701,7 +1770,8 @@ class view_submissionlist {
      *
      * @return void
      */
-    public function submission_to_pdf() {
+    public function submission_to_pdf()
+    {
         global $CFG, $DB;
 
         $this->prevent_direct_user_input(SURVEYPRO_CONFIRMED_YES);
@@ -1712,8 +1782,8 @@ class view_submissionlist {
         $event = \mod_surveypro\event\submissiontopdf_downloaded::create($eventdata);
         $event->trigger();
 
-        require_once($CFG->libdir.'/tcpdf/tcpdf.php');
-        require_once($CFG->libdir.'/tcpdf/config/tcpdf_config.php');
+        require_once($CFG->libdir . '/tcpdf/tcpdf.php');
+        require_once($CFG->libdir . '/tcpdf/config/tcpdf_config.php');
 
         $submission = $DB->get_record('surveypro_submission', ['id' => $this->submissionid]);
         $user = $DB->get_record('user', ['id' => $submission->userid]);
@@ -1744,7 +1814,7 @@ class view_submissionlist {
             $html = ($template == SURVEYPRO_2COLUMNSTEMPLATE) ? $twocolstemplate : $threecolstemplate;
 
             // First column.
-            $content = ($item->get_customnumber()) ? $item->get_customnumber().':' : '';
+            $content = ($item->get_customnumber()) ? $item->get_customnumber() . ':' : '';
             $html = str_replace('@@col1@@', $content, $html);
 
             // Second column.
@@ -1769,7 +1839,7 @@ class view_submissionlist {
             $pdf->writeHTMLCell(0, 0, '', '', $html, $border, 1, 0, true, '', true);
         }
 
-        $filename = $this->surveypro->name.'_'.$this->submissionid.'.pdf';
+        $filename = $this->surveypro->name . '_' . $this->submissionid . '.pdf';
         $pdf->Output($filename, 'D');
         die();
     }
@@ -1814,10 +1884,11 @@ class view_submissionlist {
      * @param string $content
      * @return $content with each http url replaced by a direct link
      */
-    private function replace_http_url($content) {
+    private function replace_http_url($content)
+    {
         global $CFG;
 
-        $regex = '~"('.$CFG->wwwroot.'/pluginfile.php/[^"]*)"~';
+        $regex = '~"(' . $CFG->wwwroot . '/pluginfile.php/[^"]*)"~';
         $regex = addslashes($regex);
         preg_match_all($regex, $content, $httpurls, PREG_SET_ORDER);
 
@@ -1826,7 +1897,7 @@ class view_submissionlist {
             $fileurl = $httpurl[0];
             if ($file = $this->get_image_file($fileurl)) {
                 $filecontent = $file->get_content();
-                $encodedfilecontent = '@'.base64_encode($filecontent);
+                $encodedfilecontent = '@' . base64_encode($filecontent);
                 $content = str_replace($httpurl[1], $encodedfilecontent, $content);
             }
         }
@@ -1843,7 +1914,8 @@ class view_submissionlist {
      * @param int $timemodified
      * @return void
      */
-    private function add_pdf_details($pdf, $user, $timecreated, $timemodified) {
+    private function add_pdf_details($pdf, $user, $timecreated, $timemodified)
+    {
         $pdf->SetFont('freesans', '', 12);
 
         // Set document information.
