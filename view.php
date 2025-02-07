@@ -68,6 +68,17 @@ $context = \context_module::instance($cm->id);
 // Utilitypage is going to be used in each section. This is the reason why I load it here.
 $utilitypageman = new utility_page($cm, $surveypro);
 
+//Early redirection if user has in progress submission
+$utilitylayoutman = new utility_layout($cm, $surveypro);
+$inprogress = $utilitylayoutman->has_submissions(true, SURVEYPRO_STATUSINPROGRESS, $USER->id);
+if ($inprogress > 0) {
+    $paramurl = ['s' => $cm->instance, 'area' => 'surveypro', 'section' => 'submissionslist'];
+    $url = new \moodle_url('/mod/surveypro/view.php', $paramurl);
+    redirect($url);
+}
+//END Early redirection if user has in progress submission.
+//Idea: llevar al usuario directo a la última página contestada
+
 // MARK cover.
 if ($section == 'cover') {
     // Get additional specific params.
