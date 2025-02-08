@@ -701,9 +701,38 @@ class view_submissionlist
                 ]);
 
                 
-                echo '<div class="continue-survey">';
-                echo '<p>¡Bienvenido de vuelta a la plataforma de autodiagnóstico de Carey! Actualmente <strong>' . $USER->institution . '</strong> se encuentra en un proceso de auto evaluación respecto de la Ley de Protección de Datos. Lo invitamos a continuar respondiendo el cuestionario para completar este proceso. Agradecemos su colaboración y compromiso.</p>';
-                echo '<a class="btn btn-primary" href="' . $link . '">Continuar con tu encuesta</a>';
+                echo '<div class="continue-survey container mt-4">';
+
+                echo '  <div class="row">';
+                echo '    <div class="col-12">';
+                echo '      <p class="fw-bold">¡Bienvenido de vuelta a la plataforma de autodiagnóstico de Carey!</p>';
+                echo '    </div>';
+                echo '  </div>';
+              
+                echo '  <div class="row">';
+                echo '    <div class="col-12">';
+                echo '      <p>Actualmente <strong>' . $USER->institution . '</strong> se encuentra en un proceso de auto evaluación respecto de la Ley de Protección de Datos.</p>';
+                echo '    </div>';
+                echo '  </div>';
+              
+                echo '  <div class="row">';
+                echo '    <div class="col-12">';
+                echo '      <p>Lo invitamos a continuar respondiendo el cuestionario para completar este proceso.</p>';
+                echo '    </div>';
+                echo '  </div>';
+              
+                echo '  <div class="row mb-3">';
+                echo '    <div class="col-12">';
+                echo '      <p>Agradecemos su colaboración y compromiso.</p>';
+                echo '    </div>';
+                echo '  </div>';
+              
+                echo '  <div class="row">';
+                echo '    <div class="col-12">';
+                echo '      <a class="btn btn-primary" href="' . $link . '">Continuar con tu encuesta</a>';
+                echo '    </div>';
+                echo '  </div>';
+              
                 echo '</div>';
 
                 // Retrieve all custom image URLs for the user.
