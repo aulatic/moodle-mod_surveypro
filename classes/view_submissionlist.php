@@ -729,7 +729,7 @@ class view_submissionlist
               
                 echo '  <div class="row justify-content-center">';
                 echo '    <div class="col-auto">';
-                echo '      <a class="btn btn-primary" href="' . $link . '">Continuar con tu encuesta</a>';
+                echo '      <a class="btn btn-primary" href="' . $link . '">Continuar con tu cuestionario</a>';
                 echo '    </div>';
                 echo '  </div>';
               
