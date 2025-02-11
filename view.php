@@ -124,6 +124,18 @@ if ($section == 'cover') {
     }
     //incluir seccion completa que diseñaremos en otro archivo
     include('custom-section.php');
+
+    //incluye nuevo buton iniciar cuestionario
+    $paramurl = [];
+    $paramurl['s'] = $cm->instance;
+    $paramurl['mode'] = SURVEYPRO_NEWRESPONSEMODE;
+    $paramurl['area'] = 'surveypro';
+    $paramurl['section'] = 'submissionform';
+    $paramurl['begin'] = 1;
+    $url = new \moodle_url('/mod/surveypro/view.php', $paramurl);
+    $message = get_string('addnewsubmission', 'mod_surveypro');
+    echo $OUTPUT->box($OUTPUT->single_button($url, $message, 'get', ['type' => 'primary']), 'clearfix mdl-align');
+
 }
 
 // MARK submissionslist.
