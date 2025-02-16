@@ -137,12 +137,12 @@ if ($imageCount > 0) {
         <h2>¿PREGUNTAS?</h2>
 
         <p>
-            <img src="https://cdn-icons-png.flaticon.com/512/545/545682.png" alt="Icono de pregunta" width="20" height="20">
+            <img src="https://cdn-icons-png.flaticon.com/512/545/545682.png" class="icono" alt="Icono de pregunta" width="20" height="20">
             Revise la sección de <strong>Preguntas Frecuentes</strong>.
         </p>
 
         <p>
-            <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Icono de correo" width="20" height="20">
+            <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" class="icono" alt="Icono de correo" width="20" height="20">
             Si no ve una respuesta a su pregunta, no dude en contactarnos a
             <a href="mailto:datadelve@carey.cl">datadelve@carey.cl</a>.
         </p>
