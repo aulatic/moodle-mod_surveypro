@@ -29,47 +29,149 @@ if ($imageCount > 0) {
 
     // Close the Bootstrap row.
     echo '</div>';
-} 
-//add new row in two columns, with an image in one side and a title and text in the other
-echo '<div class="row imagen-text standard-section">';
-echo '<div class="col-md-6">';
-echo '<img src="https://autodiagnostico.carey.cl/webassets/encuesta.png" alt="User Image" class="img-responsive" />';
-echo '</div>';
-echo '<div class="col-md-6">';
-//echo '<h2>Lorem Ipsum</h2>';
-echo '<p>La plataforma de autodiagnóstico dispone de un cuestionario que se ajusta a las
-necesidades específicas de la Empresa. Está compuesto inicialmente por 20 materias,
-las que se despliegan según sus respuestas, de modo tal que sólo deberá responder
-las preguntas que sean necesarias. Puede completarlo a su propio ritmo, pausando y
-retomando cuando lo desee, sin la presión de un límite de tiempo. Esta metodología y
-tecnología permite reducir la brecha de tiempo y recursos que antes requería el
-proceso inicial de entrevistas, reduciendo las entrevistas a las estrictamente necesarias
-o confirmatorias y focalizando el trabajo de campo de manera eficiente.</p>';
-echo '</div>';
-echo '</div>';
+}
+?>
 
 
-echo '<div class="row imagen-text standard-section">';
-echo '<div class="col-md-6">';
+<div class="row imagen-text standard-section">
+    <div class="col-md-6">
+        <img src="https://autodiagnostico.carey.cl/webassets/encuesta.png" alt="User Image" class="img-responsive" />
+    </div>
+    <div class="col-md-6">
+        <h2>RESPONDA UN CUESTIONARIO</h2>
+
+        <h1>RESPONDA A SU RITMO</h1>
+
+        <p>
+            <span class="platform-name">Carey Data Delve</span> dispone de un cuestionario que se ajusta a las necesidades específicas de la Empresa.
+        </p>
+
+        <ul>
+            <li>
+                <h3>Materias:</h3> El cuestionario está compuesto por 20 materias.
+            </li>
+            <li>
+                <h3>Medición:</h3> Se incluyen todas las materias incluidas en la Ley de Protección de Datos Personales.
+            </li>
+        </ul>
+    </div>
+</div>
 
 
-echo '<p>Los resultados se presentan en un dashboard obtenido mediante análisis de datos. Se
-obtiene una evaluación integral, que comprende 3 niveles: (1) percepción de
-cumplimiento; (2) conocimiento de la Ley de Protección de Datos y (3) cumplimiento
-efectivo de la misma en la Empresa. Los resultados se muestran tanto a nivel general
-como por materia, permitiéndole identificar áreas que requieren refuerzo.</p>';
-echo '</div>';
-echo '<div class="col-md-6">';
-echo '<img src="https://autodiagnostico.carey.cl/webassets/graphs.png" alt="User Image" class="img-responsive" />';
-echo '</div>';
-echo '</div>';
+<div class="row imagen-text standard-section">
+    <div class="col-md-6">
+
+        <h2>OBTENGA UN INFORME DASHBOARD</h2>
+
+        <h1>OBTENGA RESULTADOS</h1>
+
+        <p>
+            Los resultados se presentan en un dashboard obtenido mediante análisis de datos.
+            Se obtiene una evaluación, que comprende 3 ámbitos:
+        </p>
+
+        <ul>
+            <li>
+                <h3>Percepción:</h3> Del informante respecto al cumplimiento en materia de Protección de Datos Personales.
+            </li>
+            <li>
+                <h3>Conocimiento:</h3> Del informante respecto de la Ley de Protección de Datos Personales.
+            </li>
+            <li>
+                <h3>Madurez:</h3> De la Empresa en materia de Protección de Datos Personales.
+            </li>
+        </ul>
+
+        <p>
+            Los resultados se muestran tanto a nivel general como por materia, permitiéndole identificar las áreas que requieren refuerzo.
+        </p>
+    </div>
+    <div class="col-md-6">
+        <img src="https://autodiagnostico.carey.cl/webassets/graphs.png" alt="User Image" class="img-responsive" />
+    </div>
+</div>
 
 
-/* echo '<div class="row imagen-text standard-section">';
-echo '<div class="col-md-12">';
-echo '<h2>Title</h2>';
-echo '<p>Text</p>';
-echo '<button type="button" class="btn btn-primary">Click me!</button>';
-echo '</div>';
-echo '</div>';
- */
+<div class="row imagen-text standard-section">
+    <div class="col-md-6">
+        <img src="https://autodiagnostico.carey.cl/webassets/encuesta.png" alt="User Image" class="img-responsive" />
+    </div>
+    <div class="col-md-6">
+        <h2>OBTENGA UN INFORME DASHBOARD</h2>
+
+        <h1>OBTENGA RESULTADOS</h1>
+
+        <p>
+            Los resultados se presentan en un dashboard obtenido mediante análisis de datos.
+            Se obtiene una evaluación, que comprende 3 ámbitos:
+        </p>
+
+        <ul>
+            <li>
+                <h3>Percepción:</h3> Del informante respecto al cumplimiento en materia de Protección de Datos Personales.
+            </li>
+            <li>
+                <h3>Conocimiento:</h3> Del informante respecto de la Ley de Protección de Datos Personales.
+            </li>
+            <li>
+                <h3>Madurez:</h3> De la Empresa en materia de Protección de Datos Personales.
+            </li>
+        </ul>
+
+        <p>
+            Los resultados se muestran tanto a nivel general como por materia, permitiéndole identificar las áreas que requieren refuerzo.
+        </p>
+
+        <h2>METODOLOGÍA DE AUTODIAGNÓSTICO</h2>
+
+        <h1>EFICIENCIA</h1>
+
+        <ul>
+            <li>
+                <h3>Accesibilidad:</h3> Podrá acceder a Carey Data Delve desde cualquier dispositivo con conexión a internet.
+            </li>
+            <li>
+                <h3>Interfaz amigable:</h3> La plataforma de Carey Data Delve es intuitiva, facilitando su navegación y uso.
+            </li>
+            <li>
+                <h3>Adaptado:</h3> El cuestionario se ajusta según las respuestas entregadas.
+            </li>
+            <li>
+                <h3>Flexibilidad:</h3> Complete el cuestionario a su propio ritmo. Puede hacer pausas y no cuenta con un límite de tiempo.
+            </li>
+            <li>
+                <h3>Ahorro de tiempo y recursos:</h3> Esta metodología permite reducir la brecha de tiempo y recursos que antes requería el proceso inicial de entrevistas.
+            </li>
+            <li>
+                <h3>Enfoque eficiente:</h3> Limitamos las entrevistas a las estrictamente necesarias o confirmatorias, enfocando el trabajo de campo de manera más eficiente.
+            </li>
+            <li>
+                <h3>Concientización:</h3> <span class="platform-name">Carey Data Delve</span> permite iniciar un proceso de concientización sobre la relevancia de los datos personales al interior de la empresa.
+            </li>
+            <li>
+                <h3>Compatible:</h3> <span class="platform-name">Carey Data Delve</span> se complementa con las metodologías de data mapping y planes de cumplimiento desarrolladas por Carey.
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="row imagen-text standard-section">
+    <div class="col-md-6">
+
+        <h2>¿PREGUNTAS?</h2>
+
+        <p>
+            <img src="https://cdn-icons-png.flaticon.com/512/545/545682.png" alt="Icono de pregunta" width="20" height="20">
+            Revise la sección de <strong>Preguntas Frecuentes</strong>.
+        </p>
+
+        <p>
+            <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Icono de correo" width="20" height="20">
+            Si no ve una respuesta a su pregunta, no dude en contactarnos a
+            <a href="mailto:datadelve@carey.cl">datadelve@carey.cl</a>.
+        </p>
+    </div>
+    <div class="col-md-6">
+        <img src="https://autodiagnostico.carey.cl/webassets/graphs.png" alt="User Image" class="img-responsive" />
+    </div>
+</div>
