@@ -97,30 +97,6 @@ if ($imageCount > 0) {
         <img src="https://autodiagnostico.carey.cl/webassets/encuesta.png" alt="User Image" class="img-responsive" />
     </div>
     <div class="col-md-6">
-        <h2>OBTENGA UN INFORME DASHBOARD</h2>
-
-        <h1>OBTENGA RESULTADOS</h1>
-
-        <p>
-            Los resultados se presentan en un dashboard obtenido mediante análisis de datos.
-            Se obtiene una evaluación, que comprende 3 ámbitos:
-        </p>
-
-        <ul>
-            <li>
-                <h3>Percepción:</h3> Del informante respecto al cumplimiento en materia de Protección de Datos Personales.
-            </li>
-            <li>
-                <h3>Conocimiento:</h3> Del informante respecto de la Ley de Protección de Datos Personales.
-            </li>
-            <li>
-                <h3>Madurez:</h3> De la Empresa en materia de Protección de Datos Personales.
-            </li>
-        </ul>
-
-        <p>
-            Los resultados se muestran tanto a nivel general como por materia, permitiéndole identificar las áreas que requieren refuerzo.
-        </p>
 
         <h2>METODOLOGÍA DE AUTODIAGNÓSTICO</h2>
 
