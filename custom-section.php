@@ -1,7 +1,8 @@
 <?php
 
 // Retrieve all custom image URLs for the user.
-$images = get_user_custom_images($USER->id);
+$images = get_user_custom_images($USER->id,3);
+$logotipo = get_user_custom_images($USER->id,4);
 
 // Limit the number of images to 3 if there are more.
 if (count($images) > 3) {
@@ -31,6 +32,7 @@ if ($imageCount > 0) {
     echo '</div>';
 }
 ?>
+
 
 
 <div class="row imagen-text standard-section">

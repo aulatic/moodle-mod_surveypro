@@ -1,6 +1,6 @@
 <?php
 
-function get_user_custom_images($userid)
+function get_user_custom_images($userid,$filearea)
 {
     GLOBAL $CFG;
     // Ensure you have access to Moodle's global configuration and libraries.
@@ -12,9 +12,11 @@ function get_user_custom_images($userid)
     // Get the user context for the given user id.
     $context = context_user::instance($userid);
 
+    $filearea = "files_".$filearea;
+
     // Retrieve all files in the specified file area. 
     // The parameters are: contextid, component, filearea, itemid, sort order, and whether to include directories.
-    $files = $fs->get_area_files($context->id, 'profilefield_file', 'files_3', 0, 'sortorder, id', false);
+    $files = $fs->get_area_files($context->id, 'profilefield_file', $filearea, 0, 'sortorder, id', false);
 
     $urlimagenes = array();
     // Loop through each file and generate its URL.
