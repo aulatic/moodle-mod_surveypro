@@ -96,7 +96,7 @@ if ($imageCount > 0) {
 
 <div class="row imagen-text standard-section">
     <div class="col-md-6">
-        <img src="https://autodiagnostico.carey.cl/webassets/cell.png" alt="User Image" class="img-responsive" />
+        <img src="https://autodiagnostico.carey.cl/webassets/cell.png" alt="User Image" class="img-responsive cellphone" />
     </div>
     <div class="col-md-6">
 
