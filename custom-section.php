@@ -134,7 +134,7 @@ if ($imageCount > 0) {
 </div>
 
 <div class="row imagen-text standard-section">
-    <div class="col-md-6">
+    <div class="col-md-6 text-center">
 
         <h2>¿PREGUNTAS?</h2>
 
@@ -147,7 +147,7 @@ if ($imageCount > 0) {
             Si no ve una respuesta a su pregunta, no dude en contactarnos a
             <a href="mailto:datadelve@carey.cl">datadelve@carey.cl</a>.
         </p>
-        <br><br>
+        
     </div>
     <div class="col-md-6">
         <img src="https://autodiagnostico.carey.cl/webassets/graphs.png" alt="User Image" class="img-responsive" />
