@@ -147,6 +147,7 @@ if ($imageCount > 0) {
             Si no ve una respuesta a su pregunta, no dude en contactarnos a
             <a href="mailto:datadelve@carey.cl">datadelve@carey.cl</a>.
         </p>
+        <br><br>
     </div>
     <div class="col-md-6">
         <img src="https://autodiagnostico.carey.cl/webassets/graphs.png" alt="User Image" class="img-responsive" />
