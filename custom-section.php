@@ -96,7 +96,7 @@ if ($imageCount > 0) {
 
 <div class="row imagen-text standard-section">
     <div class="col-md-6">
-        <img src="https://autodiagnostico.carey.cl/webassets/encuesta.png" alt="User Image" class="img-responsive" />
+        <img src="https://autodiagnostico.carey.cl/webassets/cell.png" alt="User Image" class="img-responsive" />
     </div>
     <div class="col-md-6">
 
@@ -141,7 +141,7 @@ if ($imageCount > 0) {
         <p>
             Revise la sección de <a href="https://autodiagnostico.carey.cl/mod/page/view.php?id=6"><strong>Preguntas Frecuentes</strong></a>.
         </p>
-
+        <br><br>
         <p>
             <img src="https://cdn-icons-png.flaticon.com/512/726/726623.png" class="icono" alt="Icono de correo" width="20" height="20">
             Si no ve una respuesta a su pregunta, no dude en contactarnos a
