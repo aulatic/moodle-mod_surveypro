@@ -68,7 +68,11 @@ $context = \context_module::instance($cm->id);
 // Utilitypage is going to be used in each section. This is the reason why I load it here.
 $utilitypageman = new utility_page($cm, $surveypro);
 
-
+//Obtenemos datos para customizar la página
+$logotipo = get_user_custom_images($USER->id, 4);
+$nombrecompleto = fullname($USER);
+profile_load_custom_fields($USER);
+$profile_field_proyecto = isset($USER->profile['proyecto']) ? $USER->profile['proyecto'] : 'No especificado';
 
 // MARK cover.
 if ($section == 'cover') {
@@ -112,6 +116,17 @@ if ($section == 'cover') {
 
     // Output starts here.
     echo $OUTPUT->header();
+
+    //agrego section custom
+    echo '<div class="activity-description">';
+    if (!empty($logotipo)) {
+        echo '<img class="userpicture" src="' . reset($logotipo) . '" alt="Imagen de ' . $fullname . '">';
+    }
+    echo '<p>¡Hola, ' . $fullname . '!</p>';
+    echo '<p><strong>Proyecto:</strong> ' . $profile_field_proyecto . '</p>';
+    echo '<h1>Cumplimiento eficiente mediante el análisis de datos y asesoría legal</h1>';
+    echo '</div>';
+
     if ($canmanageitems) {
         $actionbar = new \mod_surveypro\output\action_bar($cm, $context, $surveypro);
         echo $actionbar->draw_view_action_bar();
@@ -135,7 +150,6 @@ if ($section == 'cover') {
     $url = new \moodle_url('/mod/surveypro/view.php', $paramurl);
     $message = get_string('addnewsubmission', 'mod_surveypro');
     echo $OUTPUT->box($OUTPUT->single_button($url, $message, 'get', ['type' => 'primary']), 'clearfix mdl-align');
-
 }
 
 // MARK submissionslist.
@@ -193,6 +207,16 @@ if ($section == 'submissionslist') {
 
     // Output starts here.
     echo $OUTPUT->header();
+
+    //agrego section custom
+    echo '<div class="activity-description">';
+    if (!empty($logotipo)) {
+        echo '<img class="userpicture" src="' . reset($logotipo) . '" alt="Imagen de ' . $fullname . '">';
+    }
+    echo '<p>¡Hola, ' . $fullname . '!</p>';
+    echo '<p><strong>Proyecto:</strong> ' . $profile_field_proyecto . '</p>';
+    echo '</div>';
+
 
     if ($canmanageitems) {
         $actionbar = new \mod_surveypro\output\action_bar($cm, $context, $surveypro);
