@@ -736,7 +736,7 @@ class view_submissionlist
                 echo '</div>';
 
                 // Retrieve all custom image URLs for the user.
-                $images = get_user_custom_images($USER->id);
+                $images = get_user_custom_images($USER->id,3);
 
                 // Limit the number of images to 3 if there are more.
                 if (count($images) > 3) {
