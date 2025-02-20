@@ -705,7 +705,7 @@ class view_submissionlist
 
                 echo '  <div class="row justify-content-center">';
                 echo '    <div class="col-12">';
-                echo '      <p class="fw-bold"><strong>¡Bienvenido de vuelta a la plataforma de autodiagnóstico de Carey!<strong></p>';
+                echo '      <p class="fw-bold"><strong>¡Bienvenido de vuelta a la plataforma de autodiagnóstico de Carey!</strong></p>';
                 echo '    </div>';
                 echo '  </div>';
               
