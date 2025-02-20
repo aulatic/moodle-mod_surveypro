@@ -50,10 +50,10 @@ if ($imageCount > 0) {
 
         <ul>
             <li>
-                <h3>Materias:</h3> El cuestionario está compuesto por 20 materias.
+                <h3>Materias</h3> El cuestionario está compuesto por 20 materias.
             </li>
             <li>
-                <h3>Medición:</h3> Se incluyen todas las materias incluidas en la Ley de Protección de Datos Personales.
+                <h3>Medición</h3> Se incluyen todas las materias incluidas en la Ley de Protección de Datos Personales.
             </li>
         </ul>
     </div>
@@ -68,19 +68,19 @@ if ($imageCount > 0) {
         <h1>OBTENGA RESULTADOS</h1>
 
         <p>
-            Los resultados se presentan en un dashboard obtenido mediante análisis de datos.
+            Los resultados se presentan en un <span class="platform-name">dashboard</span> obtenido mediante análisis de datos.
             Se obtiene una evaluación, que comprende 3 ámbitos:
         </p>
 
         <ul>
             <li>
-                <h3>Percepción:</h3> Del informante respecto al cumplimiento en materia de Protección de Datos Personales.
+                <h3>Percepción</h3> Del informante respecto al cumplimiento en materia de Protección de Datos Personales.
             </li>
             <li>
-                <h3>Conocimiento:</h3> Del informante respecto de la Ley de Protección de Datos Personales.
+                <h3>Conocimiento</h3> Del informante respecto de la Ley de Protección de Datos Personales.
             </li>
             <li>
-                <h3>Madurez:</h3> De la Empresa en materia de Protección de Datos Personales.
+                <h3>Madurez</h3> De la Empresa en materia de Protección de Datos Personales.
             </li>
         </ul>
 
@@ -106,28 +106,28 @@ if ($imageCount > 0) {
 
         <ul>
             <li>
-                <h3>Accesibilidad:</h3> Podrá acceder a Carey Data Delve desde cualquier dispositivo con conexión a internet.
+                <h3>Accesibilidad</h3> Podrá acceder a <span class="platform-name">Carey Data Delve</span> desde cualquier dispositivo con conexión a internet.
             </li>
             <li>
-                <h3>Interfaz amigable:</h3> La plataforma de Carey Data Delve es intuitiva, facilitando su navegación y uso.
+                <h3>Interfaz amigable</h3> La plataforma de <span class="platform-name">Carey Data Delve</span> es intuitiva, facilitando su navegación y uso.
             </li>
             <li>
-                <h3>Adaptado:</h3> El cuestionario se ajusta según las respuestas entregadas.
+                <h3>Adaptado</h3> El cuestionario se ajusta según las respuestas entregadas.
             </li>
             <li>
-                <h3>Flexibilidad:</h3> Complete el cuestionario a su propio ritmo. Puede hacer pausas y no cuenta con un límite de tiempo.
+                <h3>Flexibilidad</h3> Complete el cuestionario a su propio ritmo. Puede hacer pausas y no cuenta con un límite de tiempo.
             </li>
             <li>
-                <h3>Ahorro de tiempo y recursos:</h3> Esta metodología permite reducir la brecha de tiempo y recursos que antes requería el proceso inicial de entrevistas.
+                <h3>Ahorro de tiempo y recursos</h3> Esta metodología permite reducir la brecha de tiempo y recursos que antes requería el proceso inicial de entrevistas.
             </li>
             <li>
-                <h3>Enfoque eficiente:</h3> Limitamos las entrevistas a las estrictamente necesarias o confirmatorias, enfocando el trabajo de campo de manera más eficiente.
+                <h3>Enfoque eficiente</h3> Limitamos las entrevistas a las estrictamente necesarias o confirmatorias, enfocando el trabajo de campo de manera más eficiente.
             </li>
             <li>
-                <h3>Concientización:</h3> <span class="platform-name">Carey Data Delve</span> permite iniciar un proceso de concientización sobre la relevancia de los datos personales al interior de la empresa.
+                <h3>Concientización</h3> <span class="platform-name">Carey Data Delve</span> permite iniciar un proceso de concientización sobre la relevancia de los datos personales al interior de la empresa.
             </li>
             <li>
-                <h3>Compatible:</h3> <span class="platform-name">Carey Data Delve</span> se complementa con las metodologías de data mapping y planes de cumplimiento desarrolladas por Carey.
+                <h3>Compatible</h3> <span class="platform-name">Carey Data Delve</span> se complementa con las metodologías de data mapping y planes de cumplimiento desarrolladas por Carey.
             </li>
         </ul>
     </div>
