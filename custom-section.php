@@ -1,8 +1,8 @@
 <?php
 
 // Retrieve all custom image URLs for the user.
-$images = get_user_custom_images($USER->id,3);
-$logotipo = get_user_custom_images($USER->id,4);
+$images = get_user_custom_images($USER->id, 3);
+$logotipo = get_user_custom_images($USER->id, 4);
 
 // Limit the number of images to 3 if there are more.
 if (count($images) > 3) {
@@ -69,6 +69,8 @@ if ($imageCount > 0) {
 
         <p>
             Los resultados se presentan en un <span class="platform-name">dashboard</span> obtenido mediante análisis de datos.
+        </p>
+        <p>
             Se obtiene una evaluación, que comprende 3 ámbitos:
         </p>
 
@@ -127,7 +129,7 @@ if ($imageCount > 0) {
                 <h3>Concientización</h3> <span class="platform-name">Carey Data Delve</span> permite iniciar un proceso de concientización sobre la relevancia de los datos personales al interior de la empresa.
             </li>
             <li>
-                <h3>Compatible</h3> <span class="platform-name">Carey Data Delve</span> se complementa con las metodologías de data mapping y planes de cumplimiento desarrolladas por Carey.
+                <h3>Compatible</h3> <span class="platform-name">Carey Data Delve</span> se complementa con las metodologías de <i>data mapping</i> y planes de cumplimiento desarrolladas por Carey.
             </li>
         </ul>
     </div>
@@ -147,7 +149,7 @@ if ($imageCount > 0) {
             Si no ve una respuesta a su pregunta, no dude en contactarnos a
             <a href="mailto:datadelve@carey.cl">datadelve@carey.cl</a>.
         </p>
-        
+
     </div>
     <div class="col-md-6">
         <img src="https://autodiagnostico.carey.cl/webassets/graphs.png" alt="User Image" class="img-responsive" />
