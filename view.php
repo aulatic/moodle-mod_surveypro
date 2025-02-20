@@ -214,8 +214,9 @@ if ($section == 'submissionslist') {
     if (!empty($logotipo)) {
         echo '<img class="userpicture" src="' . reset($logotipo) . '" alt="Imagen de ' . $fullname . '">';
     }
-    echo '<p>¡Hola, ' . $nombrecompleto . '!</p>';
     echo '<p><strong>Proyecto:</strong> ' . $profile_field_proyecto . '</p>';
+    echo '<h2>¡Hola, ' . $nombrecompleto . '!</h2>';
+    
     echo '</div>';
 
 
