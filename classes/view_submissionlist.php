@@ -1116,9 +1116,7 @@ class view_submissionlist
         //Solo desplegar tabla a usuarios con permisos
         if ($canseeotherssubmissions) {
             $table->print_html();
-        } else {
-            echo "Soy un usuario sin permisos";
-        }
+        } 
 
         // If this is the output of a search and nothing has been found add a way to show all submissions.
         if (!isset($tablerow) && ($this->searchquery)) {
