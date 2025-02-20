@@ -145,7 +145,7 @@ if ($imageCount > 0) {
         </p>
         <br><br>
         <p>
-            <img src="https://cdn-icons-png.flaticon.com/512/726/726623.png" class="icono" alt="Icono de correo" width="20" height="20">
+            <img src="https://autodiagnostico.carey.cl/webassets/mail.png" class="icono" alt="Icono de correo" width="20" height="20">
             Si no ve una respuesta a su pregunta, no dude en contactarnos a
             <a href="mailto:datadelve@carey.cl">datadelve@carey.cl</a>.
         </p>
