@@ -705,13 +705,13 @@ class view_submissionlist
 
                 echo '  <div class="row justify-content-center">';
                 echo '    <div class="col-12">';
-                echo '      <p class="fw-bold">¡Bienvenido de vuelta a la plataforma de autodiagnóstico de Carey!</p>';
+                echo '      <p class="fw-bold"><strong>¡Bienvenido de vuelta a la plataforma de autodiagnóstico de Carey!<strong></p>';
                 echo '    </div>';
                 echo '  </div>';
               
                 echo '  <div class="row justify-content-center">';
                 echo '    <div class="col-12">';
-                echo '      <p>Actualmente <strong>' . $USER->institution . '</strong> se encuentra en un proceso de auto evaluación respecto de la Ley de Protección de Datos.</p>';
+                echo '      <p>Actualmente <span class="platform-name">' . $USER->institution . '</span> se encuentra en un proceso de auto evaluación respecto de la Ley de Protección de Datos.</p>';
                 echo '    </div>';
                 echo '  </div>';
               
@@ -729,7 +729,7 @@ class view_submissionlist
               
                 echo '  <div class="row justify-content-center">';
                 echo '    <div class="col-auto">';
-                echo '      <a class="btn btn-primary" href="' . $link . '">Continuar con tu cuestionario</a>';
+                echo '      <a class="btn btn-primary" href="' . $link . '">Continuar con el cuestionario</a>';
                 echo '    </div>';
                 echo '  </div>';
               
