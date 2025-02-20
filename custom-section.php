@@ -53,7 +53,7 @@ if ($imageCount > 0) {
                 <h3>Materias</h3> El cuestionario está compuesto por 20 materias.
             </li>
             <li>
-                <h3>Medición</h3> Se incluyen todas las materias incluidas en la Ley de Protección de Datos Personales.
+                <h3>Medición</h3> Se incluyen todas las materias de la Ley de Protección de Datos Personales.
             </li>
         </ul>
     </div>
@@ -138,7 +138,7 @@ if ($imageCount > 0) {
 <div class="row imagen-text standard-section">
     <div class="col-md-6 text-center">
 
-        <h2>¿PREGUNTAS?</h2>
+        <h1>¿PREGUNTAS?</h1>
 
         <p>
             Revise la sección de <a href="https://autodiagnostico.carey.cl/mod/page/view.php?id=6"><strong>Preguntas Frecuentes</strong></a>.
