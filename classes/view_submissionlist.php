@@ -711,7 +711,7 @@ class view_submissionlist
               
                 echo '  <div class="row justify-content-center">';
                 echo '    <div class="col-12">';
-                echo '      <p>Actualmente <span class="platform-name">' . $USER->institution . '</span> se encuentra en un proceso de auto evaluación respecto de la Ley de Protección de Datos.</p>';
+                echo '      <p>Actualmente <span class="platform-name-pero-sin-cursiva">' . $USER->institution . '</span> se encuentra en un proceso de auto evaluación respecto de la Ley de Protección de Datos.</p>';
                 echo '    </div>';
                 echo '  </div>';
               
