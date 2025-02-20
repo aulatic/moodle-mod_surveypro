@@ -55,6 +55,101 @@ echo $OUTPUT->header();
             <p class="text-center">Última modificación: <?php echo !empty($submission->timemodified) ? userdate($submission->timemodified) : 'N/A'; ?></p>
         </div>
     </div>
+
+    <?php if (empty($materia)) { ?>
+        <div class="row">
+            <?php foreach ($dimensiones as $dimension) { ?>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title"><?php echo ucfirst($dimension); ?></h3>
+
+                            <?php
+
+                            $puntajegeneraldimension = 0;
+                            $sumapesosmaterias = 0;
+
+                            foreach ($materias as $materia_item) {
+                                $evaluated_items = get_numero_evaluated_items($materia_item->id, $dimension);
+                                $num_evaluated_items = count($evaluated_items);
+                                $num_unanswered = 0;
+
+                                if (!empty($evaluated_items)) {
+                                    $total_score = 0;
+                                    $num_unanswered = 0;
+                                    $num_omitted = 0; // Contador de respuestas omitidas
+                                    $num_valid = 0;
+                                    $total_min_score = 0; // Suma de puntajes mínimos
+                                    $total_max_score = 0; // Suma de puntajes máximos
+
+                                    foreach ($evaluated_items as $item) {
+                                        $answer_content = get_user_answer($submissionid, $item['itemid'], $item['plugin']);
+                                        //echo "answer_content" . $answer_content;
+                                        if ($answer_content === 'NC') {
+                                            $num_unanswered++;
+                                            continue;
+                                        }
+
+                                        $answer = map_plugin_answer($item['itemid'], $answer_content, $item['plugin']);
+                                        $scores = get_question_scores($item['plugin'], $item['itemid']);
+                                        $score = transform_answer_to_score($answer, $scores['min_score'], $scores['max_score']);
+
+                                        // Contar respuestas omitidas y no acumular sus puntajes mínimos ni máximos
+                                        if ($score === null && $answer === 'idk') {
+                                            $num_omitted++;
+                                            continue; // Salta a la siguiente iteración, omitiendo suma de puntajes
+                                        }
+
+                                        $num_valid++;
+
+                                        // Sumar puntajes mínimos y máximos
+                                        $total_min_score += $scores['min_score'];
+                                        $total_max_score += $scores['max_score'];
+
+                                        // Acumular el puntaje total si es válido
+                                        if ($score !== null) {
+                                            $total_score += $score;
+                                        }
+                                    }
+                                    if ($total_max_score > $total_min_score) {
+                                        $percentage = round((($total_score - $total_min_score) / ($total_max_score - $total_min_score)) * 100, 5);
+                                        $percentageponderado = $percentage * $materia_item->peso;
+                                    } else {
+                                        //si no se puede calcular el porcentaje, se omite la materia
+                                        //echo "<br>Porcentaje No se puede calcular";
+                                        continue;
+                                    }
+                                    $puntajegeneraldimension += $percentageponderado;
+                                    $sumapesosmaterias += $materia_item->peso;
+                                    //imprimo valores solo para debugeo
+                                    if ($canmanegeitems) {
+                                        echo "<br>Dimension: " . $dimension;
+                                        echo "<br>Materia: " . $materia_item->fullname;
+                                        echo "<br>Puntaje: " . $percentage;
+                                        echo "<br>Peso: " . $materia_item->peso;
+                                        echo "<br>Puntaje Ponderado: " . $percentageponderado;
+                                        echo "<br>Suma Pesos: " . $sumapesosmaterias;
+                                        echo "<br>Puntaje General Dimension: " . $puntajegeneraldimension;
+                                        echo "<br>---------------------------------";
+                                    }
+                                }
+                            }
+
+                            $puntajegeneraldimension = round($puntajegeneraldimension / $sumapesosmaterias, 2);
+                            ?>
+
+                            <p>Puntaje General: <?php echo $puntajegeneraldimension; ?>%</p>
+                            <?php echo generate_percentage_bar($puntajegeneraldimension); ?>
+                        </div>
+                    </div>
+                </div>
+
+            <?php } ?>
+
+        </div>
+
+    <?php } ?>
     <div class="row mb-4">
         <div class="col-md-12">
             <form method="get" action="" class="form-inline justify-content-center">
