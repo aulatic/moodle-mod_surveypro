@@ -39,6 +39,9 @@ $PAGE->add_body_class('analysis-page');
 $submission = $DB->get_record('surveypro_submission', ['id' => $submissionid], '*', MUST_EXIST);
 $user = $DB->get_record('user', ['id' => $submission->userid], '*', MUST_EXIST);
 
+$cargo = $DB->get_field('surveypro_answer', 'content', ['itemid' => 50, 'submissionid' => $submissionid]);
+$cargo = $cargo !== false ? $cargo : "Desconocido";
+
 $canmanegeitems = has_capability('mod/surveypro:manageitems', $context);
 
 echo $OUTPUT->header();
@@ -50,9 +53,8 @@ echo $OUTPUT->header();
             <h2 class="text-center">Encuesta: <?php echo $surveypro->name; ?></h2>
             <p class="text-center">Informante: <?php echo fullname($user); ?></p>
             <p class="text-center">Empresa: <?php echo $user->institution; ?></p>
-            <p class="text-center">Cargo: Get cargo from question nº2</p>
-            <p class="text-center">Fecha de creación: <?php echo userdate($submission->timecreated); ?></p>
-            <p class="text-center">Última modificación: <?php echo !empty($submission->timemodified) ? userdate($submission->timemodified) : 'N/A'; ?></p>
+            <p class="text-center">Cargo: <?php echo $cargo; ?></p>
+            <p class="text-center">Fecha: <?php echo userdate(!empty($submission->timemodified) ? $submission->timemodified : $submission->timecreated); ?></p>
         </div>
     </div>
 
