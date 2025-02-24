@@ -147,8 +147,8 @@ echo $OUTPUT->header();
 
                             <p>Puntaje General: <?php echo $puntajegeneraldimension; ?>%</p>
                             <?php echo generate_percentage_bar($puntajegeneraldimension); ?>
-                            <div class="progress-circle" style="<?php echo $puntajegeneraldimension; ?>">
-                                <div class="progress-value"><?php echo $puntajegeneraldimension; ?></div>
+                            <div class="progress-circle" style="--value: <?php echo $puntajegeneraldimension; ?>">
+                                <div class="progress-value"><?php echo $puntajegeneraldimension; ?>%</div>
                             </div>
                         </div>
                     </div>
