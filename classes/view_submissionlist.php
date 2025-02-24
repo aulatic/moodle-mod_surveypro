@@ -676,100 +676,158 @@ class view_submissionlist
         $canseeotherssubmissions = has_capability('mod/surveypro:seeotherssubmissions', $this->context);
 
         //Validación temprana: Si el usuario NO tiene permisos para ver entregas de otros
-        if (!$canseeotherssubmissions) {
-            // Verificar si el usuario tiene una encuesta EN PROGRESO
-            $inprogress_sql = "SELECT * FROM {surveypro_submission} 
-                           WHERE userid = :userid 
-                             AND surveyproid = :surveyproid 
-                             AND status = :status_inprogress
-                           ORDER BY timecreated DESC LIMIT 1";
-            $inprogress_params = [
-                'userid' => $USER->id,
-                'surveyproid' => $this->surveypro->id,
-                'status_inprogress' => SURVEYPRO_STATUSINPROGRESS
-            ];
-            $inprogress_submission = $DB->get_record_sql($inprogress_sql, $inprogress_params);
+        //inicio modifica
 
-            if ($inprogress_submission) {
-                // Mostrar botón "Continuar con tu encuesta" si hay una encuesta en progreso
+        if (!$canseeotherssubmissions) {
+            // Grab the most recent submission for this user (regardless of status).
+            $sql = "SELECT * FROM {surveypro_submission}
+            WHERE userid = :userid
+              AND surveyproid = :surveyproid
+            ORDER BY timecreated DESC
+            LIMIT 1";
+            $params = [
+                'userid' => $USER->id,
+                'surveyproid' => $this->surveypro->id
+            ];
+            $submission = $DB->get_record_sql($sql, $params);
+
+            $sql = "
+            SELECT d.data
+            FROM {user_info_data} d
+            JOIN {user_info_field} f ON f.id = d.fieldid
+            WHERE f.shortname = :shortname
+            AND d.userid = :userid
+            ";
+            $params = [
+                'shortname' => 'acceso_analisis',
+                'userid' => $USER->id,
+            ];
+
+            // This will return the string value stored in the 'acceso_analisis' custom field.
+            $acceso_analisis = $DB->get_field_sql($sql, $params);
+
+            // Start the main container and common lines.
+            echo '<div class="container mt-4 text-center">';
+            echo '  <div class="row justify-content-center">';
+            echo '    <div class="col-12">';
+            echo '      <p class="fw-bold"><strong>¡Bienvenido de vuelta a la plataforma de autodiagnóstico de Carey!</strong></p>';
+            echo '    </div>';
+            echo '  </div>';
+
+            echo '  <div class="row justify-content-center">';
+            echo '    <div class="col-12">';
+            echo '      <p>Actualmente <span class="platform-name-pero-sin-cursiva">' . $USER->institution . '</span> se encuentra en un proceso de auto evaluación respecto de la Ley de Protección de Datos.</p>';
+            echo '    </div>';
+            echo '  </div>';
+
+            // Check submission status.
+            if ($submission->status == SURVEYPRO_STATUSINPROGRESS) {
+                // IN-PROGRESS scenario.
                 $link = new \moodle_url('/mod/surveypro/view.php', [
                     's' => $this->cm->instance,
-                    'submissionid' => $inprogress_submission->id,
+                    'submissionid' => $submission->id,
                     'mode' => SURVEYPRO_EDITMODE,
                     'begin' => 9,
                     'section' => 'submissionform'
                 ]);
 
-                
-                echo '<div class="continue-survey container mt-4 text-center">';
-
-                echo '  <div class="row justify-content-center">';
-                echo '    <div class="col-12">';
-                echo '      <p class="fw-bold"><strong>¡Bienvenido de vuelta a la plataforma de autodiagnóstico de Carey!</strong></p>';
-                echo '    </div>';
-                echo '  </div>';
-              
-                echo '  <div class="row justify-content-center">';
-                echo '    <div class="col-12">';
-                echo '      <p>Actualmente <span class="platform-name-pero-sin-cursiva">' . $USER->institution . '</span> se encuentra en un proceso de auto evaluación respecto de la Ley de Protección de Datos.</p>';
-                echo '    </div>';
-                echo '  </div>';
-              
                 echo '  <div class="row justify-content-center">';
                 echo '    <div class="col-12">';
                 echo '      <p>Lo invitamos a continuar respondiendo el cuestionario para completar este proceso.</p>';
                 echo '    </div>';
                 echo '  </div>';
-              
+
                 echo '  <div class="row justify-content-center mb-3">';
                 echo '    <div class="col-12">';
                 echo '      <p>Agradecemos su colaboración y compromiso.</p>';
                 echo '    </div>';
                 echo '  </div>';
-              
+
                 echo '  <div class="row justify-content-center">';
                 echo '    <div class="col-auto">';
                 echo '      <a class="btn btn-primary" href="' . $link . '">Continuar con el cuestionario</a>';
                 echo '    </div>';
                 echo '  </div>';
-              
-                echo '</div>';
+            } elseif ($submission->status == SURVEYPRO_STATUSCLOSED) {
+                // COMPLETED scenario.
+                echo '  <div class="row justify-content-center">';
+                echo '    <div class="col-12">';
+                echo '      <p>Usted ya completó con éxito el cuestionario solicitado para estos efectos.</p>';
+                echo '    </div>';
+                echo '  </div>';
 
-                // Retrieve all custom image URLs for the user.
-                $images = get_user_custom_images($USER->id,3);
+                if (!$acceso_analisis) {
 
-                // Limit the number of images to 3 if there are more.
-                if (count($images) > 3) {
-                    $images = array_slice($images, 0, 3);
+                    echo '  <div class="row justify-content-center">';
+                    echo '    <div class="col-12">';
+                    echo '      <p>Nuestro equipo legal se encuentra revisando sus respuestas. Su <i>dashboard</i> personalizado estará habilitado dentro de los próximos días.</p>';
+                    echo '    </div>';
+                    echo '  </div>';
+                } else {
+                    echo '  <div class="row justify-content-center">';
+                    echo '    <div class="col-12">';
+                    echo '      <p>Su <i>dashboard</i> personalizado ya está disponible. Además, podrá encontrar el análisis detallado en el informe preparado por nuestro equipo legal.</p>';
+                    echo '    </div>';
+                    echo '  </div>';
                 }
 
-                // Count the number of images to determine Bootstrap column width.
+                $downloadResponsesUrl = new \moodle_url('/mod/surveypro/view.php', [
+                    's' => $this->cm->instance,
+                    'area' => 'surveypro',
+                    'section' => 'submissionslist',
+                    'submissionid' => $submission->id,
+                    'act' => 9,     // "download" action
+                    'sesskey' => sesskey()
+                ]);
+
+                $analisisurl = new \moodle_url('/mod/surveypro/analysis.php', [
+                    's' => $this->cm->instance,
+                    'submissionid' => $submission->id,
+                    'sesskey' => sesskey()
+                ]);
+
+                // Two buttons side-by-side.
+                echo '  <div class="row justify-content-center mt-3">';
+                echo '    <div class="col-auto">';
+                echo '      <a class="acciones btn btn-secondary me-2" href="' . $downloadResponsesUrl->out() . '">Descargar Respuestas en PDF</a>';
+                if ($acceso_analisis) {
+                    echo '      <a class="acciones btn btn-secondary me-2" href="' . $analisisurl->out() . '">Ver Dashboard</a>';
+                }
+                echo '    </div>';
+                echo '  </div>';
+            }
+
+            // Retrieve all custom image URLs for the user.
+            $images = get_user_custom_images($USER->id, 3);
+
+            // Limit the number of images to 3 if there are more.
+            if (count($images) > 3) {
+                $images = array_slice($images, 0, 3);
+            }
+
+            // Output images if any exist.
+            if (!empty($images)) {
                 $imageCount = count($images);
+                // For 1 image: col-md-12, for 2 images: col-md-6, for 3 images: col-md-4.
+                $colWidth = 12 / $imageCount;
+                $colClass = 'col-md-' . $colWidth;
 
-                if ($imageCount > 0) {
-                    // Calculate column width based on the number of images.
-                    // For 1 image: col-md-12, for 2 images: col-md-6, for 3 images: col-md-4.
-                    $colWidth = 12 / $imageCount;  // This works because $imageCount is 1, 2, or 3.
-                    $colClass = 'col-md-' . $colWidth;
-
-                    // Start the Bootstrap row.
-                    echo '<div class="row imagenes custom-section">';
-
-                    // Loop through the images and output each in a responsive Bootstrap column.
-                    foreach ($images as $image) {
-                        echo '<div class="' . $colClass . '">';
-                        echo '<img src="' . $image . '" alt="User Image" class="img-responsive" />';
-                        echo '</div>';
-                    }
-
-                    // Close the Bootstrap row.
+                echo '<div class="row imagenes custom-section">';
+                foreach ($images as $image) {
+                    echo '<div class="' . $colClass . '">';
+                    echo '<img src="' . $image . '" alt="User Image" class="img-responsive" />';
                     echo '</div>';
                 }
-
-                return; // Detener ejecución si hay encuesta en progreso
+                echo '</div>';
             }
+
+            // Close the container.
+            echo '</div>';
+
+            return;
         }
 
+        //fin modifica
 
         $canaccessallgroups = has_capability('moodle/site:accessallgroups', $this->context);
         $caneditownsubmissions = has_capability('mod/surveypro:editownsubmissions', $this->context);
@@ -1116,7 +1174,7 @@ class view_submissionlist
         //Solo desplegar tabla a usuarios con permisos
         if ($canseeotherssubmissions) {
             $table->print_html();
-        } 
+        }
 
         // If this is the output of a search and nothing has been found add a way to show all submissions.
         if (!isset($tablerow) && ($this->searchquery)) {
