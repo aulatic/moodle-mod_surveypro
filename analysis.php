@@ -54,7 +54,6 @@ echo $OUTPUT->header();
 <div class="container mt-5">
     <div class="row mb-4">
         <div class="col-md-12">
-            <h2 class="text-center">Encuesta: <?php echo $surveypro->name; ?></h2>
             <p class="text-center">Informante: <?php echo fullname($user); ?></p>
             <p class="text-center">Empresa: <?php echo $user->institution; ?></p>
             <p class="text-center">Cargo: <?php echo $cargo; ?></p>
@@ -145,8 +144,8 @@ echo $OUTPUT->header();
                             $puntajegeneraldimension = round($puntajegeneraldimension / $sumapesosmaterias, 2);
                             ?>
 
-                            <p>Puntaje General: <?php echo $puntajegeneraldimension; ?>%</p>
-                            <?php echo generate_percentage_bar($puntajegeneraldimension); ?>
+                            <!-- <p>Puntaje General: <?php echo $puntajegeneraldimension; ?>%</p> -->
+                            <!-- <?php echo generate_percentage_bar($puntajegeneraldimension); ?> -->
                             <div class="progress-circle" style="--value: <?php echo $puntajegeneraldimension; ?>">
                                 <div class="progress-value"><?php echo $puntajegeneraldimension; ?>%</div>
                             </div>
@@ -284,7 +283,15 @@ echo $OUTPUT->header();
                                 if ($total_max_score > $total_min_score) {
                                     $percentage = round((($total_score - $total_min_score) / ($total_max_score - $total_min_score)) * 100, 1);
                                     $percentage_output = number_format($percentage, 2) . '%';
-                                    echo generate_percentage_bar($percentage);
+
+                                ?>
+
+                                    <div class="progress-circle" style="--value: <?php echo $percentage; ?>">
+                                        <div class="progress-value"><?php echo $percentage; ?>%</div>
+                                    </div>
+
+                                <?php
+                                    //echo generate_percentage_bar($percentage);
                                 } else {
                                     echo '<p>Porcentaje No se puede calcular</p>';
                                 }
