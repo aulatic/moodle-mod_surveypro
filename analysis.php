@@ -22,7 +22,7 @@ if ($surveyid == 2) {
     $dimensiones = [
         'percepcion'   => 'Percepción',
         'conocimiento' => 'Conocimiento',
-        'madurez'      => 'Madurez'
+        'cumplimiento'      => 'Madurez'
       ];
 }
 
@@ -130,7 +130,7 @@ echo $OUTPUT->header();
                                     $sumapesosmaterias += $materia_item->peso;
                                     //imprimo valores solo para debugeo
                                     if ($canmanegeitems) {
-                                        echo "<br>Dimension: " . $dimension;
+                                        echo "<br>Dimension: " . $dimensionLabel;
                                         echo "<br>Materia: " . $materia_item->fullname;
                                         echo "<br>Puntaje: " . $percentage;
                                         echo "<br>Peso: " . $materia_item->peso;
