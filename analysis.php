@@ -23,7 +23,7 @@ if ($surveyid == 2) {
         'percepcion'   => 'Percepción',
         'conocimiento' => 'Conocimiento',
         'cumplimiento'      => 'Madurez'
-      ];
+    ];
 }
 
 require_course_login($course, false, $cm);
@@ -64,7 +64,7 @@ echo $OUTPUT->header();
 
     <?php if (empty($materia)) { ?>
         <div class="row">
-            <?php foreach($dimensiones as $dimensionKey => $dimensionLabel) { ?>
+            <?php foreach ($dimensiones as $dimensionKey => $dimensionLabel) { ?>
 
                 <div class="col-md-4 mb-4">
                     <div class="card">
@@ -147,6 +147,9 @@ echo $OUTPUT->header();
 
                             <p>Puntaje General: <?php echo $puntajegeneraldimension; ?>%</p>
                             <?php echo generate_percentage_bar($puntajegeneraldimension); ?>
+                            <div class="progress-circle" style="<?php echo $puntajegeneraldimension; ?>">
+                                <div class="progress-value"><?php echo $puntajegeneraldimension; ?></div>
+                            </div>
                         </div>
                     </div>
                 </div>
