@@ -19,7 +19,11 @@ $cm = get_coursemodule_from_instance('surveypro', $surveypro->id, $course->id, f
 $materias = [];
 if ($surveyid == 2) {
     $materias = $DB->get_records('surveypro_materias', ['qid' => 'PDP']);
-    $dimensiones = ['percepcion', 'conocimiento', 'cumplimiento'];
+    $dimensiones = [
+        'percepcion'   => 'Percepción',
+        'conocimiento' => 'Conocimiento',
+        'madurez'      => 'Madurez'
+      ];
 }
 
 require_course_login($course, false, $cm);
@@ -60,12 +64,12 @@ echo $OUTPUT->header();
 
     <?php if (empty($materia)) { ?>
         <div class="row">
-            <?php foreach ($dimensiones as $dimension) { ?>
+            <?php foreach($dimensiones as $dimensionKey => $dimensionLabel) { ?>
 
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body">
-                            <h3 class="card-title"><?php echo ucfirst($dimension); ?></h3>
+                            <h3 class="card-title"><?php echo $dimensionLabel; ?></h3>
 
                             <?php
 
@@ -73,7 +77,7 @@ echo $OUTPUT->header();
                             $sumapesosmaterias = 0;
 
                             foreach ($materias as $materia_item) {
-                                $evaluated_items = get_numero_evaluated_items($materia_item->id, $dimension);
+                                $evaluated_items = get_numero_evaluated_items($materia_item->id, $dimensionKey);
                                 $num_evaluated_items = count($evaluated_items);
                                 $num_unanswered = 0;
 
@@ -177,15 +181,15 @@ echo $OUTPUT->header();
     </div>
     <?php if (!empty($materia)) { ?>
         <div class="row">
-            <?php foreach ($dimensiones as $dimension) {
-                $evaluated_items = get_numero_evaluated_items($materia, $dimension);
+            <?php foreach ($dimensiones as $dimensionKey => $dimensionLabel) {
+                $evaluated_items = get_numero_evaluated_items($materia, $dimensionKey);
                 $num_evaluated_items = count($evaluated_items);
                 $num_unanswered = 0;
             ?>
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body">
-                            <h3 class="card-title"><?php echo ucfirst($dimension); ?></h3>
+                            <h3 class="card-title"><?php echo $dimensionLabel; ?></h3>
 
                             <?php if (!empty($evaluated_items)) { ?>
                                 <ul>
