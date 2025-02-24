@@ -45,7 +45,7 @@ if ($imageCount > 0) {
         <h1>RESPONDA A SU RITMO</h1>
 
         <p>
-            <span class="platform-name">Carey Data Delve</span> dispone de un cuestionario que se ajusta a las necesidades específicas de la Empresa.
+            <span class="platform-name"><?php echo $SITE->fullname; ?></span> dispone de un cuestionario que se ajusta a las necesidades específicas de la Empresa.
         </p>
 
         <ul>
@@ -108,10 +108,10 @@ if ($imageCount > 0) {
 
         <ul>
             <li>
-                <h3>Accesibilidad</h3> Podrá acceder a <span class="platform-name">Carey Data Delve</span> desde cualquier dispositivo con conexión a internet.
+                <h3>Accesibilidad</h3> Podrá acceder a <span class="platform-name"><?php echo $SITE->fullname; ?></span> desde cualquier dispositivo con conexión a internet.
             </li>
             <li>
-                <h3>Interfaz amigable</h3> La plataforma de <span class="platform-name">Carey Data Delve</span> es intuitiva, facilitando su navegación y uso.
+                <h3>Interfaz amigable</h3> La plataforma de <span class="platform-name"><?php echo $SITE->fullname; ?></span> es intuitiva, facilitando su navegación y uso.
             </li>
             <li>
                 <h3>Adaptado</h3> El cuestionario se ajusta según las respuestas entregadas.
@@ -126,10 +126,10 @@ if ($imageCount > 0) {
                 <h3>Enfoque eficiente</h3> Limitamos las entrevistas a las estrictamente necesarias o confirmatorias, enfocando el trabajo de campo de manera más eficiente.
             </li>
             <li>
-                <h3>Concientización</h3> <span class="platform-name">Carey Data Delve</span> permite iniciar un proceso de concientización sobre la relevancia de los datos personales al interior de la empresa.
+                <h3>Concientización</h3> <span class="platform-name"><?php echo $SITE->fullname; ?></span> permite iniciar un proceso de concientización sobre la relevancia de los datos personales al interior de la empresa.
             </li>
             <li>
-                <h3>Compatible</h3> <span class="platform-name">Carey Data Delve</span> se complementa con las metodologías de <i>data mapping</i> y planes de cumplimiento desarrolladas por Carey.
+                <h3>Compatible</h3> <span class="platform-name"><?php echo $SITE->fullname; ?></span> se complementa con las metodologías de <i>data mapping</i> y planes de cumplimiento desarrolladas por Carey.
             </li>
         </ul>
     </div>
