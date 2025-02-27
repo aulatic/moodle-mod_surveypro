@@ -54,10 +54,33 @@ echo $OUTPUT->header();
 <div class="container mt-5">
     <div class="row mb-4">
         <div class="col-md-12">
-            <p class="text-center">Informante: <?php echo fullname($user); ?></p>
-            <p class="text-center">Empresa: <?php echo $user->institution; ?></p>
-            <p class="text-center">Cargo: <?php echo $cargo; ?></p>
-            <p class="text-center">Fecha: <?php echo userdate(!empty($submission->timemodified) ? $submission->timemodified : $submission->timecreated); ?></p>
+            <h1>DASHBOARD</h1>
+            <p class="text-left"><span class="atributo">Informante:</span> <?php echo fullname($user); ?></p>
+            <p class="text-left"><span class="atributo">Empresa:</span> <?php echo $user->institution; ?></p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <form method="get" action="" class="form-inline justify-content-center">
+                <input type="hidden" name="submissionid" value="<?php echo $submissionid; ?>">
+                <input type="hidden" name="s" value="<?php echo $surveyid; ?>">
+                <div class="form-group mx-sm-3 mb-2">
+                    <label for="materia" class="sr-only">Materia</label>
+                    <select class="form-control" id="materia" name="materia">
+                        <option value="">Resultados Generales</option>
+                        <?php
+                        if (!empty($materias)) {
+                            foreach ($materias as $materia_item) {
+                                $selected = ($materia_item->id == $materia) ? 'selected' : '';
+                                echo '<option value="' . $materia_item->id . '" ' . $selected . '>' . $materia_item->fullname . '</option>';
+                            }
+                        }
+                        ?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">Ver</button>
+            </form>
         </div>
     </div>
 
@@ -158,29 +181,7 @@ echo $OUTPUT->header();
         </div>
 
     <?php } ?>
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <form method="get" action="" class="form-inline justify-content-center">
-                <input type="hidden" name="submissionid" value="<?php echo $submissionid; ?>">
-                <input type="hidden" name="s" value="<?php echo $surveyid; ?>">
-                <div class="form-group mx-sm-3 mb-2">
-                    <label for="materia" class="sr-only">Materia</label>
-                    <select class="form-control" id="materia" name="materia">
-                        <option value="">Seleccionar Materia a Analizar</option>
-                        <?php
-                        if (!empty($materias)) {
-                            foreach ($materias as $materia_item) {
-                                $selected = ($materia_item->id == $materia) ? 'selected' : '';
-                                echo '<option value="' . $materia_item->id . '" ' . $selected . '>' . $materia_item->fullname . '</option>';
-                            }
-                        }
-                        ?>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary mb-2">Analizar</button>
-            </form>
-        </div>
-    </div>
+
     <?php if (!empty($materia)) { ?>
         <div class="row">
             <?php foreach ($dimensiones as $dimensionKey => $dimensionLabel) {
@@ -249,29 +250,7 @@ echo $OUTPUT->header();
                                         <?php } ?>
                                     <?php } ?>
                                 </ul>
-                                <?php
-                                // Define table object
-                                $table = new flexible_table('summary-table');
 
-                                // Define table columns and their headers
-                                $table->define_columns(['description', 'value']);
-                                $table->define_headers(['', '']); // Leave headers empty for no table header
-
-                                // Make the table ready
-                                $table->define_baseurl($PAGE->url);
-                                $table->set_attribute('class', 'generaltable'); // Add Moodle's general table class for styling
-                                $table->setup();
-
-                                // Add rows to the table
-                                $table->add_data(['Preguntas evaluadas', $num_evaluated_items]);
-                                $table->add_data(['Preguntas no contestadas', $num_unanswered]);
-                                $table->add_data(['Datos ignorados por el informante', $num_omitted]);
-                                $table->add_data(['Respuestas válidas', $num_valid]);
-
-                                // Display the table
-                                $table->finish_output();
-                                ?>
-                                <br>
                                 <?php if ($canmanegeitems) { ?>
                                     <p>Puntaje Total: <?php echo $total_score; ?></p>
                                     <p>Suma de Mínimos: <?php echo $total_min_score; ?></p>
@@ -291,6 +270,8 @@ echo $OUTPUT->header();
                                     </div>
 
                                 <?php
+
+                                echo "Preguntas respondidas con 'Desconozco': " . $num_omitted;
                                     //echo generate_percentage_bar($percentage);
                                 } else {
                                     echo '<p>Porcentaje No se puede calcular</p>';
