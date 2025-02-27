@@ -2,7 +2,9 @@
 require_once(__DIR__ . '/../../config.php');
 require_login();
 $context = context_system::instance();
-require_capability('moodle/site:config', $context);
+//require_capability('moodle/site:config', $context);
+//Aceptar gestores
+require_capability('moodle/site:manageblocks', $context);
 
 // Conexión a la base de datos de Moodle.
 global $DB, $OUTPUT, $PAGE;
