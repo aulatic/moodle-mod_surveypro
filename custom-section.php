@@ -146,8 +146,8 @@ if ($imageCount > 0) {
         <br><br>
         <p>
             <img src="https://autodiagnostico.carey.cl/webassets/mail.png" class="icono" alt="Icono de correo" width="20" height="20">
-            Si no ve una respuesta a su pregunta, no dude en contactarnos a
-            <a href="mailto:datadelve@carey.cl">datadelve@carey.cl</a>.
+            Si no ve una respuesta a su pregunta, no dude en contactarnos a 
+            <a href="mailto:careydatadvisor@carey.cl">careydatadvisor@carey.cl</a>.
         </p>
 
     </div>
