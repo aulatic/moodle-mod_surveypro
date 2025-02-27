@@ -178,7 +178,7 @@ function get_numero_evaluated_items($materiaid, $dimension)
  * specific submission ID and item ID. If the answer exists, it fetches and returns the content of the
  * user's answer. If the answer does not exist, it returns 'NC' to indicate that no answer was found.
  */
-function get_user_answer($submissionid, $itemid, $plugin)
+function get_user_answer($submissionid, $itemid)
 {
     global $DB;
 

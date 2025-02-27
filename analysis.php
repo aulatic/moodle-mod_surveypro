@@ -204,7 +204,7 @@ echo $OUTPUT->header();
                                     $total_max_score = 0; // Suma de puntajes máximos
 
                                     foreach ($evaluated_items as $item) {
-                                        $answer_content = get_user_answer($submissionid, $item['itemid'], $item['plugin']);
+                                        $answer_content = get_user_answer($submissionid, $item['itemid']);
                                         //echo "answer_content" . $answer_content;
                                         if ($answer_content === 'NC') {
                                             $num_unanswered++;
