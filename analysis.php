@@ -270,8 +270,8 @@ echo $OUTPUT->header();
                                     </div>
 
                                 <?php
-
-                                echo "Preguntas respondidas con 'Desconozco': " . $num_omitted;
+                                echo "<br>";
+                                echo "<p>Preguntas respondidas 'Desconozco': " . $num_omitted . "</p>";
                                     //echo generate_percentage_bar($percentage);
                                 } else {
                                     echo '<p>Porcentaje No se puede calcular</p>';
