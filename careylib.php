@@ -334,7 +334,7 @@ function sliders_sum_numeric_identifiers($options_array, $selected_indices)
         }
     }
 
-    return round($sum, 1);
+    return $sum;
 }
 
 /**
