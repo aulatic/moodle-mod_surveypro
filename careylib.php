@@ -93,7 +93,7 @@ function transform_answer_to_score($answer, $min_score, $max_score)
 {
 
     if (is_numeric($answer)) {
-        return round($answer, 1);
+        return $answer;
     }
 
     // Transform the answer into a score based on the rules
@@ -304,6 +304,21 @@ function map_plugin_answer($itemid, $content, $plugin)
     return $content;
 }
 
+/**
+ * The function `sliders_sum_numeric_identifiers` calculates the sum of numeric identifiers from
+ * selected options in an array.
+ * 
+ * @param options_array The `options_array` parameter is an array containing options for sliders. Each
+ * element in the array is a string representing an option in the format "numeric_identifier::label".
+ * The numeric identifier is the part before the double colon "::".
+ * @param selected_indices Selected_indices is an array that contains the selected indices of options.
+ * Each element in the array corresponds to an option in the options_array. If the value at a
+ * particular index is '1', it means that the option at that index is selected.
+ * 
+ * @return The function `sliders_sum_numeric_identifiers` returns the sum of the numeric identifiers
+ * extracted from the selected options in the `` based on the indices provided in the
+ * `` array. The sum is rounded to one decimal place before being returned.
+ */
 function sliders_sum_numeric_identifiers($options_array, $selected_indices)
 {
     //print_r ($selected_indices);
@@ -338,6 +353,8 @@ function sliders_calculate_selection_percentage($options_array, $selected_indice
 
     $total_filtered_options = count($filtered_options);
     $selected_count = 0;
+
+    
 
     foreach ($selected_indices as $index => $selected) {
         if ($selected == '1') {
