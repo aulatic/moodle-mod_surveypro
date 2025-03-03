@@ -131,13 +131,11 @@ echo $OUTPUT->header();
 
                                         $num_valid++;
 
-                                        // Sumar puntajes mínimos y máximos
-                                        $total_min_score += $scores['min_score'];
-                                        $total_max_score += $scores['max_score'];
-
-                                        // Acumular el puntaje total si es válido
+                                        // Acumular el puntaje total si es válido y  Sumar puntajes mínimos y máximos
                                         if ($score !== null) {
                                             $total_score += $score;
+                                            $total_min_score += $scores['min_score'];
+                                            $total_max_score += $scores['max_score'];
                                         }
                                     }
                                     if ($total_max_score > $total_min_score) {
@@ -229,13 +227,12 @@ echo $OUTPUT->header();
 
                                         $num_valid++;
 
-                                        // Sumar puntajes mínimos y máximos
-                                        $total_min_score += $scores['min_score'];
-                                        $total_max_score += $scores['max_score'];
 
-                                        // Acumular el puntaje total si es válido
+                                        // Acumular el puntaje total si es válido y  Sumar puntajes mínimos y máximos
                                         if ($score !== null) {
                                             $total_score += $score;
+                                            $total_min_score += $scores['min_score'];
+                                            $total_max_score += $scores['max_score'];
                                         }
                                     ?>
                                         <?php if ($canmanegeitems) { ?>
@@ -243,8 +240,8 @@ echo $OUTPUT->header();
 
                                                 <?php echo $item['itemid']; ?> - <?php echo $item['plugin']; ?>: <?php echo $answer; ?>
 
-                                                <br> Puntaje Mínimo: <?php echo $scores['min_score']; ?>
-                                                <br> Puntaje Máximo: <?php echo $scores['max_score']; ?>
+                                                <br> Puntaje Mínimo: <?php echo $score !== null ? $scores['min_score']: 'Omitido'; ?>
+                                                <br> Puntaje Máximo: <?php echo $score !== null ? $scores['max_score']: 'Omitido'; ?>
                                                 <br> Puntaje Asignado: <?php echo $score !== null ? $score : 'Omitido'; ?>
                                             </li>
                                         <?php } ?>
@@ -270,8 +267,8 @@ echo $OUTPUT->header();
                                     </div>
 
                                 <?php
-                                echo "<br>";
-                                echo "<p>Preguntas respondidas 'Desconozco': " . $num_omitted . "</p>";
+                                    echo "<br>";
+                                    echo "<p>Preguntas respondidas 'Desconozco': " . $num_omitted . "</p>";
                                     //echo generate_percentage_bar($percentage);
                                 } else {
                                     echo '<p>Porcentaje No se puede calcular</p>';
