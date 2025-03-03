@@ -1,8 +1,8 @@
 <?php
 
-function get_user_custom_images($userid,$filearea)
+function get_user_custom_images($userid, $filearea)
 {
-    GLOBAL $CFG;
+    global $CFG;
     // Ensure you have access to Moodle's global configuration and libraries.
     require_once($CFG->libdir . '/filelib.php');
 
@@ -12,7 +12,7 @@ function get_user_custom_images($userid,$filearea)
     // Get the user context for the given user id.
     $context = context_user::instance($userid);
 
-    $filearea = "files_".$filearea;
+    $filearea = "files_" . $filearea;
 
     // Retrieve all files in the specified file area. 
     // The parameters are: contextid, component, filearea, itemid, sort order, and whether to include directories.
@@ -235,11 +235,15 @@ function map_plugin_answer($itemid, $content, $plugin)
     }
 
     if ($plugin == 'careybutton') {
-        $sql = "SELECT options
+        $sql = "SELECT options, puntajemax, peso
 					FROM {surveyprofield_careybutton}
 					WHERE itemid = :itemid";
 
-        $options = $DB->get_field_sql($sql, ['itemid' => $itemid]);
+        $record = $DB->get_record_sql($sql, ['itemid' => $itemid]);
+
+        $options = $record->options;
+        $puntajemax = $record->puntajemax;
+        $peso = $record->peso;
 
         // Convert options into an array
         $options_array = explode("\n", $options);
@@ -249,6 +253,10 @@ function map_plugin_answer($itemid, $content, $plugin)
             $options_map[$index] = $parts[0]; // Take the first part only
         }
 
+        //si $options_map es numerico, multiplicar por el peso
+        if (is_numeric($options_map[$content])) {
+            return $options_map[$content] * $peso;
+        }
         // Return the mapped answer
         return $options_map[$content] ?? $content;
     }
@@ -354,7 +362,7 @@ function sliders_calculate_selection_percentage($options_array, $selected_indice
     $total_filtered_options = count($filtered_options);
     $selected_count = 0;
 
-    
+
 
     foreach ($selected_indices as $index => $selected) {
         if ($selected == '1') {
