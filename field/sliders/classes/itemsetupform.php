@@ -288,9 +288,9 @@ class itemsetupform extends item_setupbaseform
         // octavo check.
         // Si "idk" o "none" están presentes en $values, no puede haber más de un valor.
         $restrictedValues = ['idk', 'none'];
-        $foundRestricted = array_intersect($values, $restrictedValues);
+        $foundRestricted = array_intersect($labels, $restrictedValues);
 
-        if (count($foundRestricted) > 0 && count($values) > 1) {
+        if (count($foundRestricted) > 0 && count($labels) > 1) {
             $errors['options'] = 'Si selecciona "Desconozco" o "Ninguna", no puede agregar otras opciones. Debe ser una sola opción.';
         }
 
