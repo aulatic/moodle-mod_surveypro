@@ -29,8 +29,8 @@ defined('MOODLE_INTERNAL') || die();
 use mod_surveypro\utility_item;
 use mod_surveypro\local\form\item_setupbaseform;
 
-require_once($CFG->dirroot.'/lib/formslib.php');
-require_once($CFG->dirroot.'/mod/surveypro/field/sliders/lib.php');
+require_once($CFG->dirroot . '/lib/formslib.php');
+require_once($CFG->dirroot . '/mod/surveypro/field/sliders/lib.php');
 
 /**
  * The class representing the plugin form
@@ -39,14 +39,16 @@ require_once($CFG->dirroot.'/mod/surveypro/field/sliders/lib.php');
  * @copyright 2013 onwards kordan <stringapiccola@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class itemsetupform extends item_setupbaseform {
+class itemsetupform extends item_setupbaseform
+{
 
     /**
      * Definition.
      *
      * @return void
      */
-    public function definition() {
+    public function definition()
+    {
         // Start with common section of the form.
         parent::definition();
 
@@ -171,7 +173,8 @@ class itemsetupform extends item_setupbaseform {
      * @param array $files
      * @return array $errors
      */
-    public function validation($data, $files) {
+    public function validation($data, $files)
+    {
         // Get _customdata.
         $item = $this->_customdata['item'];
         $surveypro = $item->surveypro;
@@ -242,7 +245,7 @@ class itemsetupform extends item_setupbaseform {
 
         // Third check.
         // No answer is not allowed if the item is mandatory.
-        if ( isset($data['noanswerdefault']) && (isset($data['required'])) ) {
+        if (isset($data['noanswerdefault']) && (isset($data['required']))) {
             $a = get_string('noanswer', 'mod_surveypro');
             $errors['noanswerdefault'] = get_string('ierr_notalloweddefault', 'mod_surveypro', $a);
         }
@@ -280,6 +283,15 @@ class itemsetupform extends item_setupbaseform {
                 $message = get_string('ierr_maxrequiredlowerthanminrequired', 'surveyprofield_sliders', count($cleanoptions));
                 $errors['maximumrequired'] = $message;
             }
+        }
+
+        // octavo check.
+        // Si "idk" o "none" están presentes en $values, no puede haber más de un valor.
+        $restrictedValues = ['idk', 'none'];
+        $foundRestricted = array_intersect($values, $restrictedValues);
+
+        if (count($foundRestricted) > 0 && count($values) > 1) {
+            $errors['options'] = 'Si selecciona "Desconozco" o "Ninguna", no puede agregar otras opciones. Debe ser una sola opción.';
         }
 
         return $errors;
