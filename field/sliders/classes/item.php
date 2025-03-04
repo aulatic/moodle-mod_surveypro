@@ -706,6 +706,7 @@ EOS;
         // Begin of: get answercount.
         $labels = $this->get_content_array(SURVEYPRO_LABELS, 'options');
 
+		$values = $this->get_content_array(SURVEYPRO_VALUES, 'options');
         $answercount = 0;
         foreach ($labels as $k => $unused) {
             $itemname = $this->itemname.'_'.$k;
@@ -719,6 +720,22 @@ EOS;
                 $answercount++;
             }
         }
+		
+		$selectedOptions = [];
+
+		foreach ($values as $index => $option) {
+			$key = $this->itemname.'_'.$index;
+			if (isset($data[$key]) && $data[$key] == 1) {
+				$selectedOptions[] = $option;
+			}
+		}
+
+		$restrictedValues = ['none', 'idk'];
+		$foundRestricted = array_intersect($selectedOptions, $restrictedValues);
+
+		if (count($foundRestricted) > 0 && count($selectedOptions) > 1) {
+			$errors[$errorkey] = 'Si selecciona "Desconozco" o "Ninguna", no puede seleccionar otras opciones.';
+		}
         // End of: get answercount.
         // I don't care if this element is required or not.
         // If the user provides an answer, it has to be compliant with the field validation rules.
