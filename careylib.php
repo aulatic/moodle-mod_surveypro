@@ -275,6 +275,12 @@ function map_plugin_answer($itemid, $content, $plugin)
         $options_array = explode("\n", $options);
         $selected_indices = explode(';', $content);
 
+        //si a los indices seleccionadas le sobra uno al final, se trata de un usuario que responde "other", vamos a devolver el valor de la ultima opcion
+        if (count($selected_indices) === count($options_array) + 1) {
+			$ultimo_elemento = end($selected_indices);
+			return $ultimo_elemento;
+		}
+
         // Check for special cases like idk:: or none::
         $special_case = sliders_check_special_cases($options_array, $selected_indices);
         if ($special_case !== null) {
