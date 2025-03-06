@@ -395,20 +395,24 @@ function sliders_calculate_selection_percentage($options_array, $selected_indice
  */
 function sliders_check_special_cases($options_array, $selected_indices)
 {
+    $special_case = null;
     foreach ($selected_indices as $index => $selected) {
         if ($selected == '1') {
             $option = trim($options_array[$index]);
             if (strpos($option, 'idk::') === 0) {
+                // Si encuentra "idk::", retorna inmediatamente, porque tiene prioridad
                 return 'idk';
             } elseif (strpos($option, 'none::') === 0) {
-                return 'none';
+                // Solo guarda el caso "none" si no hay un idk detectado
+                $special_case = 'none';
             } elseif (strpos($option, 'incorrect::') === 0) {
-                return 'incorrect';
+                // Solo guarda el caso "incorrect" si no hay un idk detectado
+                $special_case = 'incorrect';
             }
         }
     }
 
-    return null; // No special case found
+    return $special_case;
 }
 
 /**
