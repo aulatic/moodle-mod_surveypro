@@ -37,7 +37,7 @@ if ($imageCount > 0) {
 
 <div class="row imagen-text standard-section">
     <div class="col-md-6">
-        <img src="https://autodiagnostico.carey.cl/webassets/encuesta.png" alt="User Image" class="img-responsive" />
+        <img src="<?php echo $CFG->wwwroot; ?>/webassets/encuesta.png" alt="User Image" class="img-responsive" />
     </div>
     <div class="col-md-6">
         <h2>RESPONDA UN CUESTIONARIO</h2>
@@ -91,14 +91,14 @@ if ($imageCount > 0) {
         </p>
     </div>
     <div class="col-md-6">
-        <img src="https://autodiagnostico.carey.cl/webassets/graphs.png" alt="User Image" class="img-responsive" />
+        <img src="<?php echo $CFG->wwwroot; ?>/webassets/graphs.png" alt="User Image" class="img-responsive" />
     </div>
 </div>
 
 
 <div class="row imagen-text standard-section">
     <div class="col-md-6">
-        <img src="https://autodiagnostico.carey.cl/webassets/cell.png" alt="User Image" class="img-responsive cellphone" />
+        <img src="<?php echo $CFG->wwwroot; ?>/webassets/cell.png" alt="User Image" class="img-responsive cellphone" />
     </div>
     <div class="col-md-6">
 
@@ -141,17 +141,17 @@ if ($imageCount > 0) {
         <h1>¿PREGUNTAS?</h1>
 
         <p>
-            Revise la sección de <a href="https://autodiagnostico.carey.cl/mod/page/view.php?id=6"><strong>Preguntas Frecuentes</strong></a>.
+            Revise la sección de <a href="<?php echo $CFG->wwwroot; ?>/mod/page/view.php?id=6"><strong>Preguntas Frecuentes</strong></a>.
         </p>
         <br><br>
         <p>
-            <img src="https://autodiagnostico.carey.cl/webassets/mail.png" class="icono" alt="Icono de correo" width="20" height="20">
+            <img src="<?php echo $CFG->wwwroot; ?>/webassets/mail.png" class="icono" alt="Icono de correo" width="20" height="20">
             Si no ve una respuesta a su pregunta, no dude en contactarnos a 
             <a href="mailto:careydatadvisor@carey.cl">careydatadvisor@carey.cl</a>.
         </p>
 
     </div>
     <div class="col-md-6">
-        <img src="https://autodiagnostico.carey.cl/webassets/graphs.png" alt="User Image" class="img-responsive" />
+        <img src="<?php echo $CFG->wwwroot; ?>/webassets/graphs.png" alt="User Image" class="img-responsive" />
     </div>
 </div>
