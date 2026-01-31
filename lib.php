@@ -1109,7 +1109,7 @@ function surveypro_get_first_allowed_report() {
     $return = '';
     $context = \context_module::instance($cm->id);
     $surveypro = $DB->get_record('surveypro', ['id' => $cm->instance], '*', MUST_EXIST);
-    if ($surveyproreportlist = get_plugin_list('surveyproreport')) {
+    if ($surveyproreportlist = \core_component::get_plugin_list('surveyproreport')) {
         foreach ($surveyproreportlist as $reportname => $reportpath) {
             $classname = 'surveyproreport_'.$reportname.'\report';
             $reportman = new $classname($cm, $context, $surveypro);
