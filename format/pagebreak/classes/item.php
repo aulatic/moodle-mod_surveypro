@@ -39,6 +39,13 @@ require_once($CFG->dirroot.'/mod/surveypro/format/pagebreak/lib.php');
  */
 class item extends itembase {
 
+    // Evita dynamic properties (PHP 8.2+). Campos cargados por itembase::item_load().
+    public int $id;
+    public int $surveyproid;
+    public int $timecreated;
+    public int $timemodified;
+    public string $content = '';
+
     /**
      * @var bool Can this item be parent?
      */
