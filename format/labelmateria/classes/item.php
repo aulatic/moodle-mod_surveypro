@@ -49,6 +49,8 @@ class item extends itembase {
     public int $surveyproid;
     public int $timecreated;
     public int $timemodified;
+    public ?int $indent = null;
+    public ?int $idmateria = null;
 
     // Aliases del SELECT.
     public int $pluginid;
