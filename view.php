@@ -219,7 +219,7 @@ if ($section == 'submissionslist') {
     
     echo '</div>';
 
-
+    $canmanageitems = has_capability('mod/surveypro:manageitems', $context);
     if ($canmanageitems) {
         $actionbar = new \mod_surveypro\output\action_bar($cm, $context, $surveypro);
         echo $actionbar->draw_view_action_bar();
