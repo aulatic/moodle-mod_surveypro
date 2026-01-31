@@ -40,6 +40,22 @@ require_once($CFG->dirroot.'/mod/surveypro/field/careybutton/lib.php');
  */
 class item extends itembase {
 
+    // Evita dynamic properties (PHP 8.2+). Campos cargados por itembase::item_load().
+    public int $id;
+    public int $surveyproid;
+    public int $timecreated;
+    public int $timemodified;
+
+    // Aliases del SELECT.
+    public int $pluginid;
+
+    // Campos custom (si existen en tu tabla del plugin o los agregaste en el JOIN).
+    public ?string $dimension = null;
+    public ?int $idmateria = null;
+    public ?float $puntajemin = null;
+    public ?float $puntajemax = null;
+    public ?float $peso = null;
+
     /**
      * @var string $content
      */
