@@ -656,7 +656,7 @@ class layout_itemlist {
         }
 
         $table->set_attribute('align', 'center');
-        $table->summary = get_string('itemlist', 'mod_surveypro');
+        $table->caption = get_string('itemlist', 'mod_surveypro');
         $table->print_html();
     }
 
