@@ -56,6 +56,7 @@ class item extends itembase {
     public ?float $puntajemin = null;
     public ?float $puntajemax = null;
     public ?float $peso = null;
+    public ?int $hideinstructions = null;
 
     /**
      * @var string $content
