@@ -26,14 +26,36 @@ if ($surveyid == 2) {
     ];
 }
 
+$params = [
+    's' => $surveyid,
+    'submissionid' => $submissionid,
+];
+
+$area = optional_param('area', '', PARAM_ALPHANUMEXT);
+$section = optional_param('section', '', PARAM_ALPHANUMEXT);
+if ($area !== '') {
+    $params['area'] = $area;
+}
+if ($section !== '') {
+    $params['section'] = $section;
+}
+
+$sesskey = optional_param('sesskey', '', PARAM_RAW); 
+if ($sesskey !== '') {
+    $params['sesskey'] = $sesskey;
+}
+
+$materia = optional_param('materia', 0, PARAM_INT);
+if (!empty($materia)) {
+    $params['materia'] = $materia;
+}
+
+$PAGE->set_url(new moodle_url('/mod/surveypro/analysis.php', $params));
+
+
 require_course_login($course, false, $cm);
 $context = \context_module::instance($cm->id);
 
-$urlparams = array('submissionid' => $submissionid, 'surveyid' => $surveyid);
-if (!empty($materia)) {
-    $urlparams['materia'] = $materia;
-}
-$PAGE->set_url('/mod/surveypro/analysis.php', $urlparams);
 
 $PAGE->set_context($context);
 $PAGE->set_title('Análisis Cuantitativo');
