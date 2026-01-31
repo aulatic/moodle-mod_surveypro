@@ -39,6 +39,16 @@ require_once($CFG->dirroot.'/mod/surveypro/field/character/lib.php');
  */
 class item extends itembase {
 
+    /** @var mixed */
+    public $content_editor;
+
+    public int $id;
+    public int $surveyproid;
+    public int $timecreated;
+    public int $timemodified;
+
+    public int $pluginid;
+
     /**
      * @var string $content
      */
