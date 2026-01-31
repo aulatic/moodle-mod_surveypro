@@ -44,6 +44,15 @@ class item extends itembase {
      */
     public $content = '';
 
+    // Evita dynamic properties (PHP 8.2+). Campos cargados por itembase::item_load().
+    public int $id;
+    public int $surveyproid;
+    public int $timecreated;
+    public int $timemodified;
+
+    // Aliases del SELECT.
+    public int $pluginid;
+
     /**
      * @var string $contentformat
      */
