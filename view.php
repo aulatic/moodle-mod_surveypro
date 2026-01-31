@@ -128,6 +128,7 @@ if ($section == 'cover') {
     echo '<h1>Cumplimiento eficiente mediante el análisis de datos y asesoría legal</h1>';
     echo '</div>';
 
+    $canmanageitems = has_capability('mod/surveypro:manageitems', $context);
     if ($canmanageitems) {
         $actionbar = new \mod_surveypro\output\action_bar($cm, $context, $surveypro);
         echo $actionbar->draw_view_action_bar();
@@ -398,7 +399,7 @@ if ($section == 'submissionform') {
 
     // Output starts here.
     echo $OUTPUT->header();
-
+    $canmanageitems = has_capability('mod/surveypro:manageitems', $context);
     if ($canmanageitems) {
         $actionbar = new \mod_surveypro\output\action_bar($cm, $context, $surveypro);
         echo $actionbar->draw_view_action_bar();
