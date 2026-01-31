@@ -1169,7 +1169,7 @@ class view_submissionlist
         }
         $submissions->close();
 
-        $table->summary = get_string('submissionslist', 'mod_surveypro');
+        $table->set_attribute('summary', get_string('submissionslist', 'mod_surveypro'));
 
         //Solo desplegar tabla a usuarios con permisos
         if ($canseeotherssubmissions) {
